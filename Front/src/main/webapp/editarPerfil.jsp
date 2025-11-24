@@ -567,17 +567,14 @@
                     loadingSpinner.style.display = 'block';
                     console.log('🚀 Cargando datos del usuario...');
 
-                    const response = await fetch("http://localhost:8080/usuario-ms/UsuarioControl", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        },
-                        body: JSON.stringify({
-                            accion: "obtenerPerfil",
-                            correo: userEmail
-                        })
-                    });
+
+                    const response = await fetch(
+                            `http://localhost:8080/usuario-ms/usuarios/perfil?correo=\${encodeURIComponent(userEmail)}`,
+                            {
+                                method: "GET",
+                                headers: {"Accept": "application/json"}
+                            }
+                    );
 
                     const result = await response.json();
                     console.log('📋 Respuesta del servidor:', result);
@@ -662,8 +659,8 @@
 
                     const updateData = {
                         accion: "actualizar",
-                        correo: userEmail, 
-                        nuevoCorreo: document.getElementById('correo').value, 
+                        correo: userEmail,
+                        nuevoCorreo: document.getElementById('correo').value,
                         telefono: document.getElementById('telefono').value
                     };
 
@@ -673,8 +670,8 @@
 
                     console.log('📤 Enviando actualización (solo campos editables):', updateData);
 
-                    const response = await fetch("http://localhost:8080/usuario-ms/UsuarioControl", {
-                        method: "POST",
+                    const response = await fetch("http://localhost:8080/usuario-ms/usuarios", {
+                        method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                             "Accept": "application/json"
@@ -688,7 +685,6 @@
                     if (result.success) {
                         showMessage('✅ Perfil actualizado correctamente', 'success');
                         setTimeout(() => {
-
                             const nuevoCorreo = document.getElementById('correo').value;
                             window.location.href = 'perfil.jsp?correo=' + encodeURIComponent(nuevoCorreo);
                         }, 1500);
@@ -706,5 +702,7 @@
 
             console.log('🎯 Script de edición de perfil cargado completamente');
         </script>
+
     </body>
 </html>
+

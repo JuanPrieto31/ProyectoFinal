@@ -567,61 +567,155 @@
                 }
 
                 backButton.href = 'front.jsp?correo=' + encodeURIComponent(correo);
-                console.log('🔙 Botón volver configurado a: ' + backButton.href);
 
-                try {
-                    console.log('🚀 Iniciando carga de datos para: ' + correo);
+                // ✅ VERSIÓN MEJORADA con manejo de errores
+                await cargarPerfilUsuario();
 
-                    const requestBody = {
-                        accion: "obtenerPerfil",
-                        correo: correo
-                    };
-
-                    console.log('📤 Enviando request: ', JSON.stringify(requestBody));
-
-                    const response = await fetch("http://localhost:8080/usuario-ms/UsuarioControl", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        },
-                        body: JSON.stringify(requestBody)
-                    });
-
-                    console.log('📥 Response status: ' + response.status);
-                    console.log('📥 Response ok: ' + response.ok);
-
-                    if (!response.ok) {
-                        throw new Error('Error HTTP: ' + response.status + ' - ' + response.statusText);
-                    }
-
-                    const result = await response.json();
-                    console.log('📋 Respuesta del servidor: ', result);
-
-                    if (result.success && result.usuario) {
-                        console.log('✅ Usuario encontrado: ', result.usuario);
-                        displayUserData(result.usuario);
-                        loadingSection.style.display = 'none';
-                        profileContent.style.display = 'block';
-                        console.log('🎉 Perfil cargado exitosamente');
+                function showMessage(message, type) {
+                    console.log('💬 Mensaje:', message, 'Tipo:', type);
+                    messageBox.textContent = message;
+                    messageBox.className = 'message-box';
+                    if (type === 'success') {
+                        messageBox.style.cssText = 'color: #065F46; background-color: #ECFDF5; border: 1px solid #A7F3D0;';
                     } else {
-                        throw new Error(result.mensaje || 'Error al cargar datos del usuario');
+                        messageBox.style.cssText = 'color: #991B1B; background-color: #FEF2F2; border: 1px solid #FECACA;';
                     }
+                    messageBox.style.display = 'block';
+                }
 
-                } catch (error) {
-                    console.error('❌ Error cargando perfil: ', error);
-                    loadingSection.innerHTML =
-                            '<p class="has-text-centered has-text-danger">' +
-                            '❌ Error al cargar el perfil: ' + error.message +
-                            '</p>' +
-                            '<div class="has-text-centered mt-3">' +
-                            '<button onclick="location.reload()" class="button is-primary mr-2">Reintentar</button>' +
-                            '<a href="login.jsp" class="button is-light">Volver al Login</a>' +
-                            '</div>';
+                function setActionLoading(loading) {
+                    console.log('🔄 Estado loading:', loading);
+                    actionSpinner.style.display = loading ? 'block' : 'none';
+                }
+
+                async function cargarPerfilUsuario() {
+                    try {
+                        console.log('🚀 Iniciando carga de datos via GET para:', correo);
+
+
+                        const url = `http://localhost:8080/usuario-ms/usuarios/perfil?correo=\${encodeURIComponent(correo)}`;
+                        console.log('📤 URL de petición:', url);
+
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                        const response = await fetch(url, {
+                            method: "GET",
+                            headers: {
+                                "Accept": "application/json"
+                            },
+                            signal: controller.signal
+                        });
+
+                        clearTimeout(timeoutId);
+
+                        console.log('📥 Response status:', response.status);
+                        console.log('📥 Response ok:', response.ok);
+
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            console.error('❌ Error HTTP:', response.status, errorText);
+                            throw new Error(`Error del servidor: ${response.status} - ${response.statusText}`);
+                        }
+
+                        const result = await response.json();
+                        console.log('📋 Respuesta del servidor:', result);
+
+                        // ✅ Verificación mejorada de la respuesta
+                        if (result && result.success !== undefined) {
+                            if (result.success && result.usuario) {
+                                console.log('✅ Usuario encontrado:', result.usuario);
+                                displayUserData(result.usuario);
+                                loadingSection.style.display = 'none';
+                                profileContent.style.display = 'block';
+                                console.log('🎉 Perfil cargado exitosamente');
+                            } else {
+                                throw new Error(result.mensaje || 'Error al cargar datos del usuario');
+                            }
+                        } else {
+                            throw new Error('Respuesta del servidor inválida');
+                        }
+
+                    } catch (error) {
+                        console.error('❌ Error cargando perfil:', error);
+
+                        let errorMessage = 'Error al cargar el perfil: ';
+
+                        if (error.name === 'AbortError') {
+                            errorMessage += 'Timeout - El servidor no respondió a tiempo';
+                        } else if (error.message.includes('Failed to fetch')) {
+                            errorMessage += 'No se pudo conectar al servidor. Verifica que esté ejecutándose.';
+                        } else {
+                            errorMessage += error.message;
+                        }
+
+                        loadingSection.innerHTML =
+                                '<div class="has-text-centered">' +
+                                '<p class="has-text-danger mb-3"><strong>❌ Error al cargar el perfil</strong></p>' +
+                                '<p class="mb-3">' + errorMessage + '</p>' +
+                                '<div class="buttons is-centered">' +
+                                '<button onclick="cargarPerfilUsuario()" class="button is-primary mr-2">' +
+                                '<i class="fas fa-redo"></i> Reintentar' +
+                                '</button>' +
+                                '<button onclick="usarMetodoLegacy()" class="button is-warning mr-2">' +
+                                '<i class="fas fa-history"></i> Usar método anterior' +
+                                '</button>' +
+                                '<a href="login.jsp" class="button is-light">' +
+                                '<i class="fas fa-sign-in-alt"></i> Volver al Login' +
+                                '</a>' +
+                                '</div>' +
+                                '</div>';
+                    }
+                }
+
+                // ✅ Función de respaldo por si falla el nuevo endpoint
+                async function usarMetodoLegacy() {
+                    console.log('🔄 Intentando método legacy...');
+                    loadingSection.innerHTML = '<div class="loading-spinner" style="display: block;"></div><p>Intentando con método anterior...</p>';
+
+                    try {
+                        const response = await fetch("http://localhost:8080/usuario-ms/UsuarioControl", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            },
+                            body: JSON.stringify({
+                                accion: "obtenerPerfil",
+                                correo: correo
+                            })
+                        });
+
+                        const result = await response.json();
+                        console.log('📋 Respuesta legacy:', result);
+
+                        if (result.success && result.usuario) {
+                            displayUserData(result.usuario);
+                            loadingSection.style.display = 'none';
+                            profileContent.style.display = 'block';
+                            showMessage('✅ Perfil cargado (usando método anterior)', 'success');
+                        } else {
+                            throw new Error(result.mensaje || 'Error con método anterior');
+                        }
+                    } catch (error) {
+                        console.error('❌ Error con método legacy:', error);
+                        loadingSection.innerHTML =
+                                '<div class="has-text-centered">' +
+                                '<p class="has-text-danger mb-3"><strong>❌ Error crítico</strong></p>' +
+                                '<p class="mb-3">No se pudo cargar el perfil con ningún método.</p>' +
+                                '<div class="buttons is-centered">' +
+                                '<a href="front.jsp?correo=' + encodeURIComponent(correo) + '" class="button is-primary">' +
+                                '<i class="fas fa-arrow-left"></i> Volver al Inicio' +
+                                '</a>' +
+                                '</div>' +
+                                '</div>';
+                    }
                 }
 
                 function displayUserData(usuario) {
-                    console.log('🎨 Mostrando datos del usuario: ', usuario);
+                    console.log('🎨 Mostrando datos del usuario:', usuario);
+
+                    // ✅ Asignación segura con valores por defecto
                     userName.textContent = usuario.nombre || 'Usuario';
                     dataNombre.textContent = usuario.nombre || 'No especificado';
                     dataCorreo.textContent = usuario.correo || 'No especificado';
@@ -629,28 +723,14 @@
                     dataRol.textContent = usuario.rol || 'Usuario';
                     dataCedula.textContent = usuario.cedula || 'No especificado';
                     dataFechaNacimiento.textContent = usuario.fechanacimiento || 'No especificada';
+
                     console.log('📊 Datos mostrados en la interfaz');
                 }
 
-                function setActionLoading(loading) {
-                    console.log('🔄 Estado loading: ' + loading);
-                    actionSpinner.style.display = loading ? 'block' : 'none';
-                }
-
-                function showMessage(message, type) {
-                    console.log('💬 Mensaje: ' + message + ' | Tipo: ' + type);
-                    messageBox.style.color = type === 'success' ? '#065F46' : '#991B1B';
-                    messageBox.style.backgroundColor = type === 'success' ? '#ECFDF5' : '#FEF2F2';
-                    messageBox.style.border = type === 'success' ? '1px solid #A7F3D0' : '1px solid #FECACA';
-                    messageBox.textContent = message;
-                }
-
                 document.getElementById('updateProfile').addEventListener('click', () => {
-                    console.log('✏️ Ir a editar perfil');
-
+                    console.log('✏️ Navegando a editar perfil');
                     window.location.href = 'editarPerfil.jsp?correo=' + encodeURIComponent(correo);
                 });
-
 
                 document.getElementById('deleteProfile').addEventListener('click', async () => {
                     console.log('🗑️ Iniciando eliminación de usuario');
@@ -661,38 +741,46 @@
                     }
 
                     setActionLoading(true);
-                    showMessage('', '');
+                    showMessage('Eliminando cuenta...', 'error');
 
                     try {
-                        const deleteData = {
-                            accion: "eliminar",
-                            correo: correo
-                        };
-
-                        console.log('📤 Enviando eliminación: ', JSON.stringify(deleteData));
-
-                        const response = await fetch("http://localhost:8080/usuario-ms/UsuarioControl", {
-                            method: "POST",
-                            headers: {"Content-Type": "application/json"},
-                            body: JSON.stringify(deleteData)
+                        // ✅ NUEVO ENDPOINT DELETE
+                        const response = await fetch("http://localhost:8080/usuario-ms/usuarios", {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            },
+                            body: JSON.stringify({
+                                correo: correo
+                            })
                         });
 
+                        console.log('📥 Response status eliminación:', response.status);
+
+                        if (!response.ok) {
+                            throw new Error(`Error HTTP: ${response.status}`);
+                        }
+
                         const result = await response.json();
-                        console.log('📋 Respuesta eliminación: ', result);
+                        console.log('📋 Respuesta eliminación:', result);
+
                         setActionLoading(false);
 
                         if (result.success) {
                             showMessage("✅ " + result.mensaje, 'success');
                             console.log('🔄 Redirigiendo a login en 2 segundos...');
-                            setTimeout(() => window.location.href = "login.jsp", 2000);
+                            setTimeout(() => {
+                                window.location.href = "login.jsp?mensaje=cuenta_eliminada";
+                            }, 2000);
                         } else {
                             showMessage("❌ " + (result.mensaje || "Error al eliminar cuenta"), 'error');
                         }
 
                     } catch (error) {
-                        console.error('💥 Error en eliminación: ', error);
+                        console.error('💥 Error en eliminación:', error);
                         setActionLoading(false);
-                        showMessage("⚠️ Error al conectar con el servidor", 'error');
+                        showMessage("⚠️ Error al conectar con el servidor: " + error.message, 'error');
                     }
                 });
 
@@ -701,4 +789,3 @@
         </script>
     </body>
 </html>
-

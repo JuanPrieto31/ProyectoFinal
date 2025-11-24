@@ -5,9 +5,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Propuestas</title>
-
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         <style>
             :root {
@@ -15,65 +17,101 @@
                 --primary-dark: #8B5A0F;
                 --primary-light: #E89F3C;
                 --bg-main: #FAFAFA;
-                --shadow-sm: 0 2px 8px rgba(193, 120, 23, 0.08);
-                --shadow-md: 0 8px 24px rgba(193, 120, 23, 0.12);
-                --shadow-lg: 0 16px 40px rgba(193, 120, 23, 0.15);
+                --shadow-sm: 0 4px 12px rgba(193, 120, 23, 0.08);
+                --shadow-md: 0 12px 28px rgba(193, 120, 23, 0.12);
+                --shadow-lg: 0 20px 48px rgba(193, 120, 23, 0.15);
             }
 
             body {
-                background: var(--bg-main);
+                background: linear-gradient(135deg, #FAFAFA 0%, #F3F4F6 100%);
                 min-height: 100vh;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                position: relative;
+            }
+
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: -20%;
+                left: -10%;
+                width: 600px;
+                height: 600px;
+                background: radial-gradient(circle, rgba(193, 120, 23, 0.03) 0%, transparent 70%);
+                border-radius: 50%;
+                animation: float 25s ease-in-out infinite;
+            }
+
+            @keyframes float {
+                0%, 100% { transform: translate(0, 0); }
+                50% { transform: translate(30px, 30px); }
             }
 
             .navbar {
                 background: white;
                 box-shadow: var(--shadow-sm);
-                border-bottom: 1px solid rgba(193, 120, 23, 0.1);
+                border-bottom: 1px solid rgba(193, 120, 23, 0.08);
+                backdrop-filter: blur(20px);
             }
 
             .navbar-item {
                 color: var(--primary-dark);
-                font-weight: 600;
+                font-weight: 700;
                 transition: all 0.3s ease;
-                border-radius: 8px;
+                border-radius: 10px;
                 margin: 0 0.25rem;
+                font-size: 0.95rem;
+                letter-spacing: 0.2px;
             }
 
             .navbar-item:hover {
-                background: rgba(193, 120, 23, 0.1);
+                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
                 color: var(--primary);
                 transform: translateY(-2px);
             }
 
             .navbar-link {
                 color: var(--primary-dark);
-                font-weight: 600;
-                border-radius: 8px;
+                font-weight: 700;
+                border-radius: 10px;
                 transition: all 0.3s ease;
             }
 
             .navbar-link:hover {
-                background: rgba(193, 120, 23, 0.1);
+                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
             }
 
             .navbar-dropdown {
                 background: white;
-                border: 1px solid rgba(193, 120, 23, 0.1);
+                border: 1px solid rgba(193, 120, 23, 0.08);
                 box-shadow: var(--shadow-md);
-                border-radius: 12px;
-                padding: 0.5rem 0;
+                border-radius: 16px;
+                padding: 0.75rem;
                 margin-top: 0.5rem;
                 display: none;
             }
 
             .navbar-dropdown.is-active {
                 display: block;
+                animation: dropdownSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            @keyframes dropdownSlide {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .navbar-dropdown .navbar-item {
                 padding: 0.875rem 1.5rem;
-                margin: 0.25rem 0.5rem;
+                margin: 0.25rem;
+                border-radius: 10px;
+                font-weight: 600;
             }
 
             .navbar-dropdown .navbar-item:hover {
@@ -88,91 +126,110 @@
             }
 
             .navbar-title {
-                font-weight: 700;
+                font-weight: 800;
                 font-size: 1.5rem;
                 color: var(--primary-dark);
+                letter-spacing: -0.5px;
             }
 
             .main-container {
                 max-width: 1200px;
                 margin: 0 auto;
-                padding: 2.5rem 1.5rem;
+                padding: 3rem 1.5rem;
+                position: relative;
+                z-index: 1;
             }
 
             .propuesta-card {
                 background: white;
-                border-radius: 16px;
-                margin-bottom: 1.75rem;
+                border-radius: 20px;
+                margin-bottom: 2rem;
                 box-shadow: var(--shadow-sm);
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                border: 1px solid rgba(193, 120, 23, 0.1);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 1px solid rgba(193, 120, 23, 0.08);
                 overflow: hidden;
+                animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            @keyframes cardAppear {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .propuesta-card:hover {
-                transform: translateY(-6px);
-                box-shadow: var(--shadow-md);
+                transform: translateY(-8px);
+                box-shadow: var(--shadow-lg);
             }
 
             .propuesta-card .card-header {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.05), rgba(232, 159, 60, 0.08));
-                padding: 1.5rem 2rem;
-                border-bottom: 2px solid rgba(193, 120, 23, 0.1);
+                background: linear-gradient(135deg, rgba(193, 120, 23, 0.06), rgba(232, 159, 60, 0.10));
+                padding: 2rem 2.5rem;
+                border-bottom: 2px solid rgba(193, 120, 23, 0.12);
             }
 
             .propuesta-card .card-header-title {
                 color: var(--primary-dark);
-                font-weight: 700;
-                font-size: 1.375rem;
+                font-weight: 800;
+                font-size: 1.5rem;
                 display: flex;
                 align-items: center;
-                gap: 0.75rem;
+                gap: 1rem;
+                letter-spacing: -0.3px;
             }
 
             .propuesta-card .card-header-title i {
                 color: var(--primary);
+                font-size: 1.75rem;
             }
 
             .propuesta-card .card-content {
-                padding: 2rem;
+                padding: 2.5rem;
                 color: #374151;
-                line-height: 1.7;
+                line-height: 1.8;
             }
 
             .propuesta-card .card-content .content {
                 font-size: 1.05rem;
-                margin-bottom: 1.5rem;
+                margin-bottom: 2rem;
+                font-weight: 500;
             }
 
             .propuesta-card .card-footer {
-                border-top: 1px solid rgba(193, 120, 23, 0.1);
-                background: rgba(250, 250, 250, 0.5);
+                border-top: 1px solid rgba(193, 120, 23, 0.08);
+                background: linear-gradient(135deg, rgba(250, 250, 250, 0.3), rgba(243, 244, 246, 0.5));
                 padding: 0;
             }
 
             .propuesta-card .card-footer-item {
-                padding: 1rem 1.5rem;
+                padding: 1.25rem 2rem;
                 color: var(--primary);
-                font-weight: 600;
+                font-weight: 700;
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
-                gap: 0.5rem;
+                gap: 0.75rem;
+                font-size: 0.95rem;
             }
 
             .propuesta-card .card-footer-item:hover {
-                background: rgba(193, 120, 23, 0.1);
+                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
                 color: var(--primary-dark);
             }
 
             .loading-spinner {
-                width: 48px;
-                height: 48px;
-                border: 5px solid rgba(193, 120, 23, 0.15);
+                width: 56px;
+                height: 56px;
+                border: 5px solid rgba(193, 120, 23, 0.12);
                 border-top: 5px solid var(--primary);
                 border-radius: 50%;
-                animation: spin 0.8s linear infinite;
-                margin: 3rem auto;
+                animation: spin 0.7s linear infinite;
+                margin: 4rem auto;
                 display: none;
             }
 
@@ -181,20 +238,33 @@
             }
 
             .notification {
-                border-radius: 12px;
+                border-radius: 16px;
                 box-shadow: var(--shadow-sm);
-                border-left: 4px solid;
+                border-left: 5px solid;
+                font-weight: 600;
+                animation: fadeIn 0.4s ease;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .notification.is-warning {
                 border-left-color: #F59E0B;
-                background: #FFFBEB;
+                background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
                 color: #92400E;
             }
 
             .notification.is-danger {
                 border-left-color: #DC2626;
-                background: #FEF2F2;
+                background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
                 color: #991B1B;
             }
 
@@ -210,40 +280,44 @@
                 height: 100%;
                 padding: 0.875rem 1.5rem;
                 transition: all 0.3s ease;
-                border-radius: 8px;
+                border-radius: 10px;
                 width: 100%;
                 text-align: left;
-                margin: 0.25rem 0.5rem;
+                margin: 0.25rem;
+                font-weight: 600;
             }
 
             .button-as-link:hover {
-                background: rgba(193, 120, 23, 0.1);
+                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
                 transform: translateX(5px);
             }
 
             .meta-info {
                 display: flex;
-                gap: 1.5rem;
+                gap: 2rem;
                 flex-wrap: wrap;
-                margin-top: 1.25rem;
-                padding-top: 1.25rem;
-                border-top: 1px solid rgba(193, 120, 23, 0.1);
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid rgba(193, 120, 23, 0.08);
             }
 
             .meta-item {
                 display: flex;
                 align-items: center;
-                gap: 0.5rem;
+                gap: 0.75rem;
                 color: #6B7280;
                 font-size: 0.95rem;
+                font-weight: 600;
             }
 
             .meta-item i {
                 color: var(--primary-light);
+                font-size: 1.1rem;
             }
 
             .meta-item strong {
                 color: var(--primary-dark);
+                font-weight: 700;
             }
 
             .navbar-burger {
@@ -252,7 +326,7 @@
             }
 
             .navbar-burger:hover {
-                background: rgba(193, 120, 23, 0.1);
+                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
             }
 
             @media (max-width: 768px) {
@@ -263,7 +337,19 @@
                 .navbar-menu {
                     background: white;
                     box-shadow: var(--shadow-md);
-                    border-radius: 0 0 12px 12px;
+                    border-radius: 0 0 16px 16px;
+                }
+
+                .main-container {
+                    padding: 2rem 1rem;
+                }
+
+                .propuesta-card .card-header {
+                    padding: 1.5rem 1.75rem;
+                }
+
+                .propuesta-card .card-content {
+                    padding: 2rem 1.75rem;
                 }
             }
         </style>

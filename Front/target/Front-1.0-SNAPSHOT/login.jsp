@@ -299,11 +299,10 @@
                 }
 
                 try {
-                    const response = await fetch("http://localhost:8080/usuario-ms/UsuarioControl", {
+                    const response = await fetch("http://localhost:8080/usuario-ms/usuarios/login", {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
                         body: JSON.stringify({
-                            accion: "login",
                             correo: correo,
                             contraseña: contraseña
                         })
