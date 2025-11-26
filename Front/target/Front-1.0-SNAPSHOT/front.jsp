@@ -43,8 +43,12 @@
             }
 
             @keyframes float {
-                0%, 100% { transform: translate(0, 0); }
-                50% { transform: translate(30px, 30px); }
+                0%, 100% {
+                    transform: translate(0, 0);
+                }
+                50% {
+                    transform: translate(30px, 30px);
+                }
             }
 
             .navbar {
@@ -234,7 +238,9 @@
             }
 
             @keyframes spin {
-                to { transform: rotate(360deg); }
+                to {
+                    transform: rotate(360deg);
+                }
             }
 
             .notification {
@@ -362,10 +368,10 @@
                 response.sendRedirect("login.jsp?error=no_correo");
                 return;
             }
-            
+
             String correoEncoded = java.net.URLEncoder.encode(correo, "UTF-8");
         %>
-        
+
         <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
@@ -377,18 +383,18 @@
 
             <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-start">
-                    <a class="navbar-item" href="perfil.jsp?correo=<%= correoEncoded %>">
+                    <a class="navbar-item" href="perfil.jsp?correo=<%= correoEncoded%>">
                         <i class="fas fa-user-circle"></i>
                         <span class="ml-2">Perfil</span>
                     </a>
                 </div>
-                
+
                 <div class="navbar-center">
                     <h1 class="navbar-title">
                         <i class="fas fa-lightbulb mr-2"></i>Propuestas
                     </h1>
                 </div>
-                
+
                 <div class="navbar-end">
                     <div class="navbar-item has-dropdown">
                         <a class="navbar-link" id="menuToggle">
@@ -402,7 +408,7 @@
                             </a>
                             <form action="PropuestaControl" method="post" style="margin: 0;">
                                 <input type="hidden" name="accion" value="ver">
-                                <input type="hidden" name="correo" value="<%= correo %>">
+                                <input type="hidden" name="correo" value="<%= correo%>">
                                 <button type="submit" class="navbar-item button-as-link">
                                     <i class="fas fa-lightbulb"></i>
                                     Ver Propuestas
@@ -410,7 +416,7 @@
                             </form>
                             <form action="PropuestaControl" method="post" style="margin: 0;">
                                 <input type="hidden" name="accion" value="crear">
-                                <input type="hidden" name="correo" value="<%= correo %>">
+                                <input type="hidden" name="correo" value="<%= correo%>">
                                 <button type="submit" class="navbar-item button-as-link">
                                     <i class="fas fa-plus-circle"></i>
                                     Nueva Propuesta
@@ -437,43 +443,43 @@
             <div class="loading-spinner" id="loadingSpinner"></div>
             <div id="propuestas"></div>
         </main>
-        
+
         <script>
-            const correoUsuario = "<%= correo %>";
-            const apiURL = "http://localhost:8080/propuesta-ms/PropuestaControl";
+            const correoUsuario = "<%= correo%>";
+            const apiURL = "http://localhost:8080/propuesta-ms/propuestas/";
 
             console.log('🚀 Front iniciado para usuario: ' + correoUsuario);
 
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 console.log('🔧 Configurando menús...');
-                
+
                 const menuToggle = document.getElementById('menuToggle');
                 const menuDropdown = document.getElementById('menuDropdown');
-                
-                menuToggle.addEventListener('click', function(e) {
+
+                menuToggle.addEventListener('click', function (e) {
                     e.stopPropagation();
                     menuDropdown.classList.toggle('is-active');
                     console.log('📱 Menú ' + (menuDropdown.classList.contains('is-active') ? 'abierto' : 'cerrado'));
                 });
-                
-                document.addEventListener('click', function(e) {
+
+                document.addEventListener('click', function (e) {
                     if (!menuDropdown.contains(e.target) && e.target !== menuToggle) {
                         menuDropdown.classList.remove('is-active');
                     }
                 });
-                
+
                 const menuItems = menuDropdown.querySelectorAll('.navbar-item, .button-as-link');
                 menuItems.forEach(item => {
-                    item.addEventListener('click', function() {
+                    item.addEventListener('click', function () {
                         menuDropdown.classList.remove('is-active');
                     });
                 });
-                
+
                 const navbarBurger = document.querySelector('.navbar-burger');
                 const navbarMenu = document.getElementById('navbarMenu');
-                
+
                 if (navbarBurger) {
-                    navbarBurger.addEventListener('click', function() {
+                    navbarBurger.addEventListener('click', function () {
                         navbarBurger.classList.toggle('is-active');
                         navbarMenu.classList.toggle('is-active');
                         console.log('🍔 Menú hamburguesa ' + (navbarMenu.classList.contains('is-active') ? 'abierto' : 'cerrado'));
@@ -497,17 +503,20 @@
 
                 try {
                     console.log('📤 Solicitando propuestas para: ' + correoUsuario);
-                    
-                    const response = await fetch(apiURL, {
-                        method: "POST",
-                        headers: { 
-                            "Content-Type": "application/json",
+
+                    // Construir URL con parámetros GET
+                    const url = new URL(apiURL);
+                    if (correoUsuario && correoUsuario !== "null") {
+                        url.searchParams.append('correo', correoUsuario);
+                    }
+
+                    console.log('🔗 URL de solicitud: ' + url.toString());
+
+                    const response = await fetch(url, {
+                        method: "GET",
+                        headers: {
                             "Accept": "application/json"
-                        },
-                        body: JSON.stringify({
-                            accion: "listar",
-                            correo: correoUsuario
-                        })
+                        }
                     });
 
                     console.log('📥 Response status: ' + response.status);
@@ -522,48 +531,48 @@
 
                     setLoading(false);
 
-                    if (result.success && result.propuestas) {
-                        const propuestas = result.propuestas;
+                    if (result.success) {
+                        const propuestas = result.propuestas || [];
                         console.log('✅ Propuestas recibidas: ' + propuestas.length);
-                        
+
                         if (propuestas.length === 0) {
-                            contenedor.innerHTML = 
-                                '<div class="notification is-warning has-text-centered">' +
-                                '<i class="fas fa-info-circle fa-2x mb-3"></i>' +
-                                '<p>No hay propuestas disponibles. ¡Sé el primero en crear una!</p>' +
-                                '</div>';
+                            contenedor.innerHTML =
+                                    '<div class="notification is-warning has-text-centered">' +
+                                    '<i class="fas fa-info-circle fa-2x mb-3"></i>' +
+                                    '<p>No hay propuestas disponibles. ¡Sé el primero en crear una!</p>' +
+                                    '</div>';
                             return;
                         }
 
                         let html = '';
                         for (let i = 0; i < propuestas.length; i++) {
                             const p = propuestas[i];
-                            html += 
-                                '<div class="card propuesta-card">' +
-                                '<header class="card-header">' +
-                                '<p class="card-header-title">' +
-                                '<i class="fas fa-lightbulb"></i>' +
-                                (p.titulo || 'Sin título') +
-                                '</p>' +
-                                '</header>' +
-                                '<div class="card-content">' +
-                                '<div class="content">' + (p.descripcion || p.contenido || 'Sin descripción') + '</div>' +
-                                '<div class="meta-info">' +
-                                '<div class="meta-item">' +
-                                '<i class="fas fa-calendar-alt"></i>' +
-                                '<strong>Creado:</strong> ' + (p.fechaCreacion || p.fechacreacion || 'Fecha no disponible') +
-                                '</div>' +
-                                '<div class="meta-item">' +
-                                '<i class="fas fa-user"></i>' +
-                                '<strong>Autor:</strong> ' + (p.autor || 'Anónimo') +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>';
+                            html +=
+                                    '<div class="card propuesta-card">' +
+                                    '<header class="card-header">' +
+                                    '<p class="card-header-title">' +
+                                    '<i class="fas fa-lightbulb"></i>' +
+                                    (p.titulo || 'Sin título') +
+                                    '</p>' +
+                                    '</header>' +
+                                    '<div class="card-content">' +
+                                    '<div class="content">' + (p.descripcion || p.contenido || 'Sin descripción') + '</div>' +
+                                    '<div class="meta-info">' +
+                                    '<div class="meta-item">' +
+                                    '<i class="fas fa-calendar-alt"></i>' +
+                                    '<strong>Creado:</strong> ' + (p.fechaCreacion || p.fechacreacion || 'Fecha no disponible') +
+                                    '</div>' +
+                                    '<div class="meta-item">' +
+                                    '<i class="fas fa-user"></i>' +
+                                    '<strong>Autor:</strong> ' + (p.autor || 'Anónimo') +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>';
                         }
                         contenedor.innerHTML = html;
                         console.log('🎉 Propuestas mostradas: ' + propuestas.length);
-                        
+
                     } else {
                         throw new Error(result.mensaje || 'Error al cargar propuestas');
                     }
@@ -571,11 +580,11 @@
                 } catch (error) {
                     console.error('❌ Error cargando propuestas: ', error);
                     setLoading(false);
-                    contenedor.innerHTML = 
-                        '<div class="notification is-danger has-text-centered">' +
-                        '<i class="fas fa-exclamation-triangle fa-2x mb-3"></i>' +
-                        '<p>Error al cargar las propuestas: ' + error.message + '</p>' +
-                        '</div>';
+                    contenedor.innerHTML =
+                            '<div class="notification is-danger has-text-centered">' +
+                            '<i class="fas fa-exclamation-triangle fa-2x mb-3"></i>' +
+                            '<p>Error al cargar las propuestas: ' + error.message + '</p>' +
+                            '</div>';
                 }
             }
 
