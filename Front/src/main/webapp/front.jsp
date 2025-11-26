@@ -29,7 +29,6 @@
                 position: relative;
             }
 
-
             body::before {
                 content: '';
                 position: fixed;
@@ -51,6 +50,7 @@
                 }
             }
 
+            /* Added complete navbar styles */
             .navbar {
                 background: white;
                 box-shadow: var(--shadow-sm);
@@ -144,6 +144,7 @@
                 z-index: 1;
             }
 
+            /* Enhanced card styles with animations */
             .propuesta-card {
                 background: white;
                 border-radius: 20px;
@@ -208,6 +209,9 @@
                 border-top: 1px solid rgba(193, 120, 23, 0.08);
                 background: linear-gradient(135deg, rgba(250, 250, 250, 0.3), rgba(243, 244, 246, 0.5));
                 padding: 0;
+                display: flex;
+                align-items: center;
+                gap: 0;
             }
 
             .propuesta-card .card-footer-item {
@@ -219,6 +223,13 @@
                 align-items: center;
                 gap: 0.75rem;
                 font-size: 0.95rem;
+                flex: 1;
+                justify-content: center;
+                border-right: 1px solid rgba(193, 120, 23, 0.08);
+            }
+
+            .propuesta-card .card-footer-item:last-child {
+                border-right: none;
             }
 
             .propuesta-card .card-footer-item:hover {
@@ -226,6 +237,32 @@
                 color: var(--primary-dark);
             }
 
+            .btn-donation {
+                background: linear-gradient(135deg, var(--primary-light), var(--primary));
+                color: white;
+                border: none;
+                padding: 1.25rem 2rem;
+                border-radius: 0;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                font-size: 0.95rem;
+                flex: 1;
+                justify-content: center;
+            }
+
+            .btn-donation:hover {
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                color: white;
+                transform: scale(1.02);
+                box-shadow: 0 8px 16px rgba(193, 120, 23, 0.25);
+            }
+
+
+            /* Added loading spinner styles */
             .loading-spinner {
                 width: 56px;
                 height: 56px;
@@ -243,6 +280,7 @@
                 }
             }
 
+            /* Enhanced notification styles */
             .notification {
                 border-radius: 16px;
                 box-shadow: var(--shadow-sm);
@@ -298,6 +336,7 @@
                 transform: translateX(5px);
             }
 
+            /* Added meta info styles */
             .meta-info {
                 display: flex;
                 gap: 2rem;
@@ -358,7 +397,9 @@
                     padding: 2rem 1.75rem;
                 }
             }
+
         </style>
+
     </head>
 
     <body>
@@ -406,22 +447,14 @@
                                 <i class="fas fa-home"></i>
                                 Inicio
                             </a>
-                            <form action="PropuestaControl" method="post" style="margin: 0;">
-                                <input type="hidden" name="accion" value="ver">
-                                <input type="hidden" name="correo" value="<%= correo%>">
-                                <button type="submit" class="navbar-item button-as-link">
-                                    <i class="fas fa-lightbulb"></i>
-                                    Ver Propuestas
-                                </button>
-                            </form>
-                            <form action="PropuestaControl" method="post" style="margin: 0;">
-                                <input type="hidden" name="accion" value="crear">
-                                <input type="hidden" name="correo" value="<%= correo%>">
-                                <button type="submit" class="navbar-item button-as-link">
-                                    <i class="fas fa-plus-circle"></i>
-                                    Nueva Propuesta
-                                </button>
-                            </form>
+                            <a class="navbar-item" href="verpropuestas.jsp?correo=<%= correoEncoded%>">
+                                <i class="fas fa-user-circle"></i>
+                                <span class="ml-2">Ver Mis Propuesta</span>
+                            </a>
+                            <a class="navbar-item" href="nuevapropuesta.jsp?correo=<%= correoEncoded%>">
+                                <i class="fas fa-user-circle"></i>
+                                <span class="ml-2">Nuevas Propuestas</span>
+                            </a>
                             <hr class="navbar-divider">
                             <a class="navbar-item" href="#">
                                 <i class="fas fa-cog"></i>
@@ -568,28 +601,39 @@
                                     '</div>' +
                                     '</div>' +
                                     '</div>' +
+                                    '<footer class="card-footer">' +
+                                    '<button class="btn-donation" onclick="realizarDonacion(' + i + ', \'' + (p.id || '') + '\')">' +
+                                    '<i class="fas fa-heart"></i>' +
+                                    'Donar' +
+                                    '</button>' +
+                                    '</footer>' +
                                     '</div>';
                         }
                         contenedor.innerHTML = html;
                         console.log('🎉 Propuestas mostradas: ' + propuestas.length);
-
                     } else {
-                        throw new Error(result.mensaje || 'Error al cargar propuestas');
+                        contenedor.innerHTML =
+                                '<div class="notification is-danger has-text-centered">' +
+                                '<i class="fas fa-exclamation-circle fa-2x mb-3"></i>' +
+                                '<p>' + (result.message || 'Error al cargar propuestas') + '</p>' +
+                                '</div>';
                     }
-
                 } catch (error) {
-                    console.error('❌ Error cargando propuestas: ', error);
+                    console.error('❌ Error: ', error.message);
                     setLoading(false);
                     contenedor.innerHTML =
                             '<div class="notification is-danger has-text-centered">' +
-                            '<i class="fas fa-exclamation-triangle fa-2x mb-3"></i>' +
-                            '<p>Error al cargar las propuestas: ' + error.message + '</p>' +
+                            '<i class="fas fa-exclamation-circle fa-2x mb-3"></i>' +
+                            '<p>Error al conectar con el servidor: ' + error.message + '</p>' +
                             '</div>';
                 }
             }
 
-            console.log('🎯 Script de front completamente cargado');
+            function realizarDonacion(indice, propuestaId) {
+                console.log('💝 Iniciando donación para propuesta: ' + propuestaId);
+                // Aquí puedes integrar con tu sistema de pagos (Stripe, PayPal, etc.)
+                alert('¡Gracias por tu intención de donar a esta propuesta!\n\nPropuesta ID: ' + propuestaId + '\n\nEsta funcionalidad se integrará con un sistema de pagos próximamente.');
+            }
         </script>
     </body>
 </html>
-

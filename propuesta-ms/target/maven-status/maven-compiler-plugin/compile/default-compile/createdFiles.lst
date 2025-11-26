@@ -1,0 +1,5 @@
+Persistencia\datos.class
+Presentacion\PropuestaControl.class
+Modelo\Propuesta.class
+Servicio\PropuestaServicio.class
+Persistencia\PropuestaDao.class
