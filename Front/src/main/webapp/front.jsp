@@ -406,22 +406,20 @@
                                 <i class="fas fa-home"></i>
                                 Inicio
                             </a>
-                            <form action="PropuestaControl" method="post" style="margin: 0;">
-                                <input type="hidden" name="accion" value="ver">
-                                <input type="hidden" name="correo" value="<%= correo%>">
-                                <button type="submit" class="navbar-item button-as-link">
-                                    <i class="fas fa-lightbulb"></i>
-                                    Ver Propuestas
-                                </button>
-                            </form>
-                            <form action="PropuestaControl" method="post" style="margin: 0;">
-                                <input type="hidden" name="accion" value="crear">
-                                <input type="hidden" name="correo" value="<%= correo%>">
-                                <button type="submit" class="navbar-item button-as-link">
-                                    <i class="fas fa-plus-circle"></i>
-                                    Nueva Propuesta
-                                </button>
-                            </form>
+                            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="verpropuestas.jsp?correo=<%= correoEncoded%>">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="ml-2">Ver Mis Propuesta</span>
+                    </a>
+                </div>
+                            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="nuevapropuesta.jsp?correo=<%= correoEncoded%>">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="ml-2">Nuevas Propuestas</span>
+                    </a>
+                </div>
                             <hr class="navbar-divider">
                             <a class="navbar-item" href="#">
                                 <i class="fas fa-cog"></i>
