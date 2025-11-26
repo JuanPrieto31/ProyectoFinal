@@ -4,15 +4,13 @@ import Modelo.Propuesta;
 import Persistencia.datos;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.LinkedList;
+
 
 /**
  *
@@ -22,149 +20,198 @@ public class PropuestaDao {
 
     static final String URL = "jdbc:postgresql://localhost:5432/ProyectoDS";
     private static final String USER = "postgres";
-    private static final String PASSWORD = "Prieto310106";
+    private static final String PASSWORD = "123456789";
 
-    public int buscarId(String correo) throws SQLException {
-        System.out.println("[DEBUG] PropuestaRep.buscarId - Buscando ID de usuario por correo: " + correo);
+    // ============================================================
+    // GUARDAR PROPUESTA
+    // ============================================================
+    public void savePropuesta(Propuesta propuesta) throws SQLException {
 
-        String sql = "SELECT idusuario FROM usuario WHERE correo = ?";
+        System.out.println("[DEBUG] PropuestaDao.savePropuesta - Iniciando registro");
+        System.out.println("[DEBUG] Datos -> Título: " + propuesta.getTitulo()
+                + ", UsuarioID: " + propuesta.getIdUsuario());
+
+        String sql = "INSERT INTO propuesta(titulo, contenido, fechacreacion, idusuario) "
+                + "VALUES(?, ?, ?, ?)";
+
         Connection conn = null;
         PreparedStatement stmt = null;
-        ResultSet rs = null;
 
         try {
             Class.forName("org.postgresql.Driver");
-            System.out.println("[DEBUG] Driver PostgreSQL cargado correctamente");
-
             datos conbd = new datos(URL, USER, PASSWORD);
             conn = conbd.getConn();
 
             if (conn == null) {
-                throw new SQLException("No se pudo establecer conexión a la base de datos");
+                throw new SQLException("No se pudo establecer conexión con la base de datos");
             }
 
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, correo);
-            rs = stmt.executeQuery();
+            stmt.setString(1, propuesta.getTitulo());
+            stmt.setString(2, propuesta.getContenido());
+            stmt.setDate(3, java.sql.Date.valueOf(propuesta.getFechacreacion()));
+            stmt.setInt(4, propuesta.getIdUsuario());
 
-            if (rs.next()) {
-                int id = rs.getInt("idusuario");
-                System.out.println("[DEBUG] ID encontrado: " + id);
-                return id;
-            } else {
-                System.out.println("[WARN] No se encontró usuario con el correo: " + correo);
-                return 0;
-            }
+            System.out.println("[DEBUG] Ejecutando INSERT...");
+            int rows = stmt.executeUpdate();
+            System.out.println("[DEBUG] Propuesta guardada. Filas afectadas: " + rows);
 
         } catch (ClassNotFoundException e) {
-            System.out.println("[ERROR] Driver PostgreSQL no encontrado: " + e.getMessage());
-            e.printStackTrace();
             throw new SQLException("Driver PostgreSQL no encontrado", e);
+
         } catch (SQLException e) {
-            System.out.println("[ERROR] Error SQL en buscarId: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("[ERROR] Error SQL al guardar propuesta: " + e.getMessage());
             throw e;
+
         } finally {
             try {
-                if (rs != null) {
-                    rs.close();
-                }
                 if (stmt != null) {
                     stmt.close();
                 }
                 if (conn != null) {
                     conn.close();
                 }
-                System.out.println("[DEBUG] Conexión cerrada correctamente");
+                System.out.println("[DEBUG] Conexión cerrada (savePropuesta)");
             } catch (SQLException e) {
-                System.out.println("[ERROR] Error al cerrar conexión: " + e.getMessage());
+                System.out.println("[ERROR] Error cerrando recursos: " + e.getMessage());
             }
         }
     }
 
-    public void savePropuesta(Propuesta propuesta) throws SQLException {
-        System.out.println("[DEBUG] PropuestaRep.savePropuesta - Iniciando registro de Propuesta");
-        System.out.println("[DEBUG] Datos de la propuesta - Título: " + propuesta.getTitulo());
+    // ============================================================
+    // OBTENER PROPUESTA POR ID
+    // ============================================================
+    public Propuesta buscarPorId(int idPropuesta, int idUsuario) throws SQLException {
+    String sql = "SELECT * FROM propuesta WHERE id = ? AND idusuario = ?";
+    
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    Propuesta propuesta = null;
 
-        String sql = "INSERT INTO propuesta (titulo, descripcion, idusuario) VALUES (?, ?, ?)";
-        Connection conn = null;
-        PreparedStatement stmt = null;
+    try {
+        Class.forName("org.postgresql.Driver");
+        datos conbd = new datos(URL, USER, PASSWORD);
+        conn = conbd.getConn();
 
-        try {
-            Class.forName("org.postgresql.Driver");
-            System.out.println("[DEBUG] Driver PostgreSQL cargado correctamente");
+        stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, idPropuesta);
+        stmt.setInt(2, idUsuario);
 
-            datos conbd = new datos(URL, USER, PASSWORD);
-            conn = conbd.getConn();
+        rs = stmt.executeQuery();
 
-            if (conn == null) {
-                throw new SQLException("No se pudo establecer conexión a la base de datos");
-            }
-
-            System.out.println("[DEBUG] Conexión establecida, preparando statement");
-
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, propuesta.getTitulo());
-            stmt.setString(2, propuesta.getContenido());
-            stmt.setInt(3, propuesta.getIdUsuario());
-
-            System.out.println("[DEBUG] Ejecutando INSERT en la base de datos");
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println("[DEBUG] Propuesta guardada exitosamente. Filas afectadas: " + rowsAffected);
-
-        } catch (ClassNotFoundException e) {
-            System.out.println("[ERROR] Driver PostgreSQL no encontrado: " + e.getMessage());
-            throw new SQLException("Driver PostgreSQL no encontrado", e);
-        } catch (SQLException e) {
-            System.out.println("[ERROR] Error SQL al guardar propuesta: " + e.getMessage());
-            throw e;
-        } catch (Exception e) {
-            System.out.println("[ERROR] Error general al guardar propuesta: " + e.getMessage());
-            throw new SQLException("Error al guardar propuesta", e);
-        } finally {
-            if (stmt != null) try {
-                stmt.close();
-            } catch (SQLException ignored) {
-            }
-            if (conn != null) try {
-                conn.close();
-            } catch (SQLException ignored) {
-            }
-            System.out.println("[DEBUG] Conexión cerrada correctamente");
-        }
-    }
-
-    public List<Propuesta> findAllPropuestas() {
-        List<Propuesta> lista = new LinkedList<>();
-        String sql = "SELECT idpropuesta, titulo, descripcion, fechacreacion, idusuario FROM propuesta";
-
-        try {
-            datos conbd = new datos(URL, USER, PASSWORD);
-            try (Connection conn = conbd.getConn(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-
-                while (rs.next()) {
-                    int idPropuesta = rs.getInt("idpropuesta");
-                    String titulo = rs.getString("titulo");
-                    String descripcion = rs.getString("descripcion");
-                    Date fechaCreacionSQL = rs.getDate("fechacreacion"); // Lee java.sql.Date
-                    int idUsuario = rs.getInt("idusuario");
-
-                    Propuesta p = new Propuesta(idPropuesta, titulo, descripcion, idUsuario);
-
-                    // Conversión de java.sql.Date a java.time.LocalDate
-                    if (fechaCreacionSQL != null) {
-                        p.setFechacreacion(fechaCreacionSQL.toLocalDate()); // Convierte y asigna
-                    }
-
-                    lista.add(p);
-                }
-            } 
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("[ERROR] Error al listar propuestas: " + e.getMessage());
+        if (rs.next()) {
+            propuesta = new Propuesta(
+                rs.getInt("id"),
+                rs.getString("titulo"),
+                rs.getString("contenido"),
+                rs.getDate("fechacreacion").toLocalDate(),
+                rs.getInt("idusuario")
+            );
         }
 
-        return lista;
+    } catch (Exception e) {
+        throw new SQLException("Error en buscarPorIdYUsuario", e);
+    } finally {
+        if (rs != null) rs.close();
+        if (stmt != null) stmt.close();
+        if (conn != null) conn.close();
     }
+    return propuesta;
+}
+
+    // ============================================================
+    // ELIMINAR PROPUESTA POR ID
+    // ============================================================
+    public boolean eliminarPropuestaDeUsuario(int idPropuesta, int idUsuario) throws SQLException {
+    String sql = "DELETE FROM propuesta WHERE id = ? AND idusuario = ?";
+    
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    
+    try {
+        Class.forName("org.postgresql.Driver");
+        datos conbd = new datos(URL, USER, PASSWORD);
+        conn = conbd.getConn();
+
+        stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, idPropuesta);
+        stmt.setInt(2, idUsuario);
+
+        int rows = stmt.executeUpdate();
+        return rows > 0;
+
+    } catch (Exception e) {
+        throw new SQLException("Error eliminando propuesta del usuario", e);
+    } finally {
+        if (stmt != null) stmt.close();
+        if (conn != null) conn.close();
+    }
+}
+
+    // ============================================================
+    // ACTUALIZAR PROPUESTA
+    // ============================================================
+    public boolean editarPropuestaDeUsuario(Propuesta propuesta) throws SQLException {
+    String sql = "UPDATE propuesta SET titulo = ?, contenido = ? "
+               + "WHERE id = ? AND idusuario = ?";
+    
+    Connection conn = null;
+    PreparedStatement stmt = null;
+
+    try {
+        Class.forName("org.postgresql.Driver");
+        datos conbd = new datos(URL, USER, PASSWORD);
+        conn = conbd.getConn();
+
+        stmt = conn.prepareStatement(sql);
+        stmt.setString(1, propuesta.getTitulo());
+        stmt.setString(2, propuesta.getContenido());
+        stmt.setInt(3, propuesta.getId());
+        stmt.setInt(4, propuesta.getIdUsuario());
+
+        int rows = stmt.executeUpdate();
+        return rows > 0;
+
+    } catch (Exception e) {
+        throw new SQLException("Error editando propuesta del usuario", e);
+    } finally {
+        if (stmt != null) stmt.close();
+        if (conn != null) conn.close();
+    }
+}
+    public List<Propuesta> listarPorUsuario(int idUsuario) throws SQLException {
+    String sql = "SELECT * FROM propuesta WHERE idusuario = ?";
+    List<Propuesta> lista = new ArrayList<>();
+
+    try {
+        Class.forName("org.postgresql.Driver");
+        datos conbd = new datos(URL, USER, PASSWORD);
+        Connection conn = conbd.getConn();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, idUsuario);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            Propuesta p = new Propuesta(
+                    rs.getInt("id"),
+                    rs.getString("titulo"),
+                    rs.getString("contenido"),
+                    rs.getDate("fechacreacion").toLocalDate(),
+                    rs.getInt("idusuario")
+            );
+            lista.add(p);
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+    } catch (Exception e) {
+        throw new SQLException("Error al listar propuestas", e);
+    }
+
+    return lista;
+}
+
 }
