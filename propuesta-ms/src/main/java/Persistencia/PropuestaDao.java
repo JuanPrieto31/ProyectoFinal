@@ -158,11 +158,80 @@ public class PropuestaDao {
 
                     lista.add(p);
                 }
-            } 
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("[ERROR] Error al listar propuestas: " + e.getMessage());
+        }
+
+        return lista;
+    }
+    public List<Propuesta> findPropuestasByUsuario(int usuarioId) throws SQLException {
+        System.out.println("[DEBUG] PropuestaDao.findPropuestasByUsuario - Buscando propuestas para usuario ID: " + usuarioId);
+
+        List<Propuesta> lista = new LinkedList<>();
+        String sql = "SELECT idpropuesta, titulo, descripcion, fechacreacion, idusuario FROM propuesta WHERE idusuario = ?";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            System.out.println("[DEBUG] Driver PostgreSQL cargado correctamente");
+
+            datos conbd = new datos(URL, USER, PASSWORD);
+            conn = conbd.getConn();
+
+            if (conn == null) {
+                throw new SQLException("No se pudo establecer conexión a la base de datos");
+            }
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, usuarioId);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int idPropuesta = rs.getInt("idpropuesta");
+                String titulo = rs.getString("titulo");
+                String descripcion = rs.getString("descripcion");
+                Date fechaCreacionSQL = rs.getDate("fechacreacion");
+                int idUsuario = rs.getInt("idusuario");
+
+                Propuesta p = new Propuesta(idPropuesta, titulo, descripcion, idUsuario);
+
+                // Conversión de java.sql.Date a java.time.LocalDate
+                if (fechaCreacionSQL != null) {
+                    p.setFechacreacion(fechaCreacionSQL.toLocalDate());
+                }
+
+                lista.add(p);
+            }
+
+            System.out.println("[DEBUG] Se encontraron " + lista.size() + " propuestas para el usuario ID: " + usuarioId);
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("[ERROR] Driver PostgreSQL no encontrado: " + e.getMessage());
+            throw new SQLException("Driver PostgreSQL no encontrado", e);
+        } catch (SQLException e) {
+            System.out.println("[ERROR] Error SQL en findPropuestasByUsuario: " + e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+                System.out.println("[DEBUG] Conexión cerrada correctamente en findPropuestasByUsuario");
+            } catch (SQLException e) {
+                System.out.println("[ERROR] Error al cerrar conexión: " + e.getMessage());
+            }
         }
 
         return lista;

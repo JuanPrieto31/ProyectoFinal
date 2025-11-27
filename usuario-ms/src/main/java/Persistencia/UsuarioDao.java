@@ -135,7 +135,7 @@ public class UsuarioDao {
 
     public Usuario buscarUsuarioPorCorreo(String correo) throws SQLException {
 
-        String sql = "SELECT nombre, correo, telefono, rol, cedula, fechanacimiento "
+        String sql = "SELECT idusuario, nombre, correo, telefono, rol, cedula, fechanacimiento "
                 + "FROM usuario WHERE correo = ?";
 
         System.out.println("[DEBUG] UsuarioRep.buscarUsuarioPorCorreo - Buscando: " + correo);
@@ -160,12 +160,11 @@ public class UsuarioDao {
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-
                 usuario = new Usuario(
-                        0,
+                        rs.getInt("idusuario"), // ¡Asegúrate de que dice "idusuario"!
                         rs.getString("nombre"),
                         rs.getString("correo"),
-                        null,
+                        null, // Contraseña se excluye del SELECT
                         rs.getString("telefono"),
                         rs.getString("rol"),
                         rs.getInt("cedula"),

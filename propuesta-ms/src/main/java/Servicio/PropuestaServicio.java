@@ -4,6 +4,7 @@ import Modelo.Propuesta;
 import Persistencia.PropuestaDao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.sql.SQLException;
 import java.util.List;
@@ -93,6 +94,31 @@ public class PropuestaServicio {
             respuesta.addProperty("mensaje", "Error al listar propuestas: " + e.getMessage());
         }
 
+        return respuesta;
+    }
+     public JsonObject listarPropuestasPorUsuario(String idUsuario) {
+        JsonObject respuesta = new JsonObject();
+        try {
+            int usuarioId = Integer.parseInt(idUsuario);
+            
+            List<Propuesta> propuestas = pd.findPropuestasByUsuario(usuarioId);
+            
+            JsonArray propuestasArray = gson.toJsonTree(propuestas).getAsJsonArray();
+            
+            respuesta.addProperty("success", true);
+            respuesta.add("propuestas", propuestasArray);
+            respuesta.addProperty("mensaje", "Propuestas listadas correctamente para el usuario: " + idUsuario);
+            
+        } catch (NumberFormatException e) {
+            respuesta.addProperty("success", false);
+            respuesta.addProperty("mensaje", "ID de usuario inválido: " + idUsuario);
+        } catch (SQLException e) {
+            respuesta.addProperty("success", false);
+            respuesta.addProperty("mensaje", "Error al listar propuestas: " + e.getMessage());
+        } catch (Exception e) {
+            respuesta.addProperty("success", false);
+            respuesta.addProperty("mensaje", "Error inesperado: " + e.getMessage());
+        }
         return respuesta;
     }
 }

@@ -65,6 +65,7 @@ public class UsuarioServicio {
         return response;
     }
 
+    // --- MÉTODO CORREGIDO AQUÍ ---
     public JsonObject obtenerPerfil(String correo) {
         JsonObject response = new JsonObject();
 
@@ -81,6 +82,9 @@ public class UsuarioServicio {
         if (resultado[0].equals("success") && resultado.length > 2) {
             Usuario usuario = (Usuario) resultado[2];
             JsonObject usuarioJson = new JsonObject();
+            
+           
+            usuarioJson.addProperty("idusuario", usuario.getId()); 
             usuarioJson.addProperty("nombre", usuario.getNombre());
             usuarioJson.addProperty("correo", usuario.getCorreo());
             usuarioJson.addProperty("telefono", usuario.getTelefono());

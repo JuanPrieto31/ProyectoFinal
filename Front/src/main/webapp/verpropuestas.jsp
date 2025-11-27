@@ -444,7 +444,7 @@
 
         <script>
             const correoUsuario = "<%= correo%>";
-            const apiURL = "http://localhost:8080/propuesta-ms/propuestas/";
+            const apiURL = "http://localhost:8080/propuesta-ms/propuestas/listarid";
 
             console.log('🚀 Front iniciado para usuario: ' + correoUsuario);
 
@@ -466,11 +466,21 @@
                     }
                 });
 
+                const menuItems = menuDropdown.querySelectorAll('.navbar-item, .button-as-link');
+                menuItems.forEach(item => {
+                    item.addEventListener('click', function () {
+                        menuDropdown.classList.remove('is-active');
+                    });
+                });
+
                 const navbarBurger = document.querySelector('.navbar-burger');
+                const navbarMenu = document.getElementById('navbarMenu');
+
                 if (navbarBurger) {
                     navbarBurger.addEventListener('click', function () {
                         navbarBurger.classList.toggle('is-active');
-                        console.log('🍔 Menú hamburguesa ' + (navbarBurger.classList.contains('is-active') ? 'abierto' : 'cerrado'));
+                        navbarMenu.classList.toggle('is-active');
+                        console.log('🍔 Menú hamburguesa ' + (navbarMenu.classList.contains('is-active') ? 'abierto' : 'cerrado'));
                     });
                 }
 
@@ -487,17 +497,24 @@
             async function cargarPropuestas() {
                 const contenedor = document.getElementById("propuestas");
                 contenedor.innerHTML = "";
+
+                if (!correoUsuario || correoUsuario === "null" || correoUsuario.trim() === "") {
+                    contenedor.innerHTML =
+                            '<div class="notification is-danger has-text-centered">' +
+                            '<i class="fas fa-exclamation-circle fa-2x mb-3"></i>' +
+                            '<p>Error: No hay usuario autenticado</p>' +
+                            '</div>';
+                    return;
+                }
+
                 setLoading(true);
 
                 try {
                     console.log('📤 Solicitando propuestas para: ' + correoUsuario);
 
-                    const url = new URL(apiURL);
-                    if (correoUsuario && correoUsuario !== "null") {
-                        url.searchParams.append('correo', correoUsuario);
-                    }
+                    const url = apiURL + "?correo=" + encodeURIComponent(correoUsuario);
 
-                    console.log('🔗 URL de solicitud: ' + url.toString());
+                    console.log('🔗 URL de solicitud: ' + url);
 
                     const response = await fetch(url, {
                         method: "GET",
@@ -534,7 +551,6 @@
                         let html = '';
                         for (let i = 0; i < propuestas.length; i++) {
                             const p = propuestas[i];
-                            const propuestaID = p.id || '';
                             html +=
                                     '<div class="card propuesta-card">' +
                                     '<header class="card-header">' +
@@ -544,44 +560,51 @@
                                     '</p>' +
                                     '</header>' +
                                     '<div class="card-content">' +
-                                    '<div class="content">' +
-                                    (p.descripcion || 'Sin descripción') +
-                                    '</div>' +
+                                    '<div class="content">' + (p.descripcion || p.contenido || 'Sin descripción') + '</div>' +
                                     '<div class="meta-info">' +
                                     '<div class="meta-item">' +
-                                    '<i class="fas fa-calendar"></i>' +
-                                    '<span><strong>' + (p.fechaCreacion || 'N/A') + '</strong></span>' +
+                                    '<i class="fas fa-calendar-alt"></i>' +
+                                    '<strong>Creado:</strong> ' + (p.fechaCreacion || p.fechacreacion || 'Fecha no disponible') +
                                     '</div>' +
                                     '<div class="meta-item">' +
                                     '<i class="fas fa-user"></i>' +
-                                    '<span><strong>' + (p.autor || 'N/A') + '</strong></span>' +
+                                    '<strong>Autor:</strong> ' + (p.autor || 'Anónimo') +
                                     '</div>' +
                                     '</div>' +
                                     '</div>' +
-                                    '<div class="card-footer">' +
-                                    '<a href="editarpropuesta.jsp?id=' + propuestaID + '&correo=<%= correoEncoded%>' + '" class="card-footer-item">' +
-                                    '<i class="fas fa-edit"></i>' +
-                                    '<span>Editar</span>' +
-                                    '</a>' +
-                                    '</div>' +
+                                    '<footer class="card-footer">' +
+                                    '<button class="btn-donation" onclick="realizarDonacion(' + i + ', \'' + (p.id || '') + '\')">' +
+                                    '<i class="fas fa-heart"></i>' +
+                                    'Donar' +
+                                    '</button>' +
+                                    '</footer>' +
                                     '</div>';
                         }
                         contenedor.innerHTML = html;
+                        console.log('🎉 Propuestas mostradas: ' + propuestas.length);
                     } else {
                         contenedor.innerHTML =
-                                '<div class="notification is-danger">' +
+                                '<div class="notification is-danger has-text-centered">' +
+                                '<i class="fas fa-exclamation-circle fa-2x mb-3"></i>' +
                                 '<p>' + (result.message || 'Error al cargar propuestas') + '</p>' +
                                 '</div>';
                     }
                 } catch (error) {
-                    console.error('❌ Error:', error);
+                    console.error('❌ Error: ', error.message);
                     setLoading(false);
                     contenedor.innerHTML =
-                            '<div class="notification is-danger">' +
-                            '<p>Error al conectar con el servidor. Intenta más tarde.</p>' +
+                            '<div class="notification is-danger has-text-centered">' +
+                            '<i class="fas fa-exclamation-circle fa-2x mb-3"></i>' +
+                            '<p>Error al conectar con el servidor: ' + error.message + '</p>' +
                             '</div>';
                 }
             }
+
+            function realizarDonacion(indice, propuestaId) {
+                console.log('💝 Iniciando donación para propuesta: ' + propuestaId);
+                // Aquí puedes integrar con tu sistema de pagos (Stripe, PayPal, etc.)
+                alert('¡Gracias por tu intención de donar a esta propuesta!\n\nPropuesta ID: ' + propuestaId + '\n\nEsta funcionalidad se integrará con un sistema de pagos próximamente.');
+            }
         </script>
-    </body>
+         </body>
 </html>
