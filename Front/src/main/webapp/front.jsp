@@ -447,7 +447,6 @@
                                 <i class="fas fa-home"></i>
                                 Inicio
                             </a>
-<<<<<<< HEAD
                             <a class="navbar-item" href="verpropuestas.jsp?correo=<%= correoEncoded%>">
                                 <i class="fas fa-user-circle"></i>
                                 <span class="ml-2">Ver Mis Propuesta</span>
@@ -456,22 +455,6 @@
                                 <i class="fas fa-user-circle"></i>
                                 <span class="ml-2">Nuevas Propuestas</span>
                             </a>
-=======
-                            <div id="navbarMenu" class="navbar-menu">
-                <div class="navbar-start">
-                    <a class="navbar-item" href="verpropuestas.jsp?correo=<%= correoEncoded%>">
-                        <i class="fas fa-user-circle"></i>
-                        <span class="ml-2">Ver Mis Propuesta</span>
-                    </a>
-                </div>
-                            <div id="navbarMenu" class="navbar-menu">
-                <div class="navbar-start">
-                    <a class="navbar-item" href="nuevapropuesta.jsp?correo=<%= correoEncoded%>">
-                        <i class="fas fa-user-circle"></i>
-                        <span class="ml-2">Nuevas Propuestas</span>
-                    </a>
-                </div>
->>>>>>> b5d45492d2d7e5531562a898d13a80dda6854aeb
                             <hr class="navbar-divider">
                             <a class="navbar-item" href="#">
                                 <i class="fas fa-cog"></i>
