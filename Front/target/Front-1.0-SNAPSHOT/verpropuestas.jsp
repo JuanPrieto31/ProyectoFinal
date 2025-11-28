@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Propuestas</title>
+        <title>Mis Propuestas</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,18 +12,31 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         <style>
+            /* Paleta de colores suave para adultos mayores */
             :root {
-                --primary: #C17817;
-                --primary-dark: #8B5A0F;
-                --primary-light: #E89F3C;
-                --bg-main: #FAFAFA;
-                --shadow-sm: 0 4px 12px rgba(193, 120, 23, 0.08);
-                --shadow-md: 0 12px 28px rgba(193, 120, 23, 0.12);
-                --shadow-lg: 0 20px 48px rgba(193, 120, 23, 0.15);
+                --primary: #8B7355;
+                --primary-dark: #6B5344;
+                --primary-light: #A89078;
+                --primary-soft: #C4B5A5;
+                --bg-main: #FAF8F5;
+                --bg-warm: #F5F2EE;
+                --card-bg: #FFFFFF;
+                --text-dark: #4A4A4A;
+                --text-medium: #6B6B6B;
+                --text-light: #8B8B8B;
+                --border-soft: rgba(139, 115, 85, 0.12);
+                --shadow-soft: 0 4px 20px rgba(107, 83, 68, 0.08);
+                --shadow-hover: 0 12px 36px rgba(107, 83, 68, 0.14);
+                --warning-bg: #FFF8E1;
+                --warning-text: #F57C00;
+                --error-bg: #FFEBEE;
+                --error-text: #C62828;
+                --delete-color: #B71C1C;
+                --delete-light: #D32F2F;
             }
 
             body {
-                background: linear-gradient(135deg, #FAFAFA 0%, #F3F4F6 100%);
+                background: linear-gradient(145deg, var(--bg-main) 0%, var(--bg-warm) 100%);
                 min-height: 100vh;
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 position: relative;
@@ -36,7 +49,7 @@
                 left: -10%;
                 width: 600px;
                 height: 600px;
-                background: radial-gradient(circle, rgba(193, 120, 23, 0.03) 0%, transparent 70%);
+                background: radial-gradient(circle, rgba(139, 115, 85, 0.04) 0%, transparent 70%);
                 border-radius: 50%;
                 animation: float 25s ease-in-out infinite;
             }
@@ -52,8 +65,8 @@
 
             .navbar {
                 background: white;
-                box-shadow: var(--shadow-sm);
-                border-bottom: 1px solid rgba(193, 120, 23, 0.08);
+                box-shadow: var(--shadow-soft);
+                border-bottom: 1px solid var(--border-soft);
                 backdrop-filter: blur(20px);
                 padding: 0 1.5rem;
                 display: flex;
@@ -68,8 +81,8 @@
             }
 
             .navbar-item {
-                color: var(--primary-dark);
-                font-weight: 700;
+                color: var(--text-dark);
+                font-weight: 600;
                 transition: all 0.3s ease;
                 border-radius: 10px;
                 margin: 0 0.25rem;
@@ -79,27 +92,27 @@
             }
 
             .navbar-item:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.08), rgba(168, 144, 120, 0.12));
                 color: var(--primary);
                 transform: translateY(-2px);
             }
 
             .navbar-link {
-                color: var(--primary-dark);
-                font-weight: 700;
+                color: var(--text-dark);
+                font-weight: 600;
                 border-radius: 10px;
                 transition: all 0.3s ease;
                 padding: 0.75rem 1rem;
             }
 
             .navbar-link:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.08), rgba(168, 144, 120, 0.12));
             }
 
             .navbar-dropdown {
                 background: white;
-                border: 1px solid rgba(193, 120, 23, 0.08);
-                box-shadow: var(--shadow-md);
+                border: 1px solid var(--border-soft);
+                box-shadow: var(--shadow-hover);
                 border-radius: 16px;
                 padding: 0.75rem;
                 margin-top: 0.5rem;
@@ -131,7 +144,7 @@
                 padding: 0.875rem 1.5rem;
                 margin: 0.25rem;
                 border-radius: 10px;
-                font-weight: 600;
+                font-weight: 500;
             }
 
             .navbar-dropdown .navbar-item:hover {
@@ -146,9 +159,9 @@
             }
 
             .navbar-title {
-                font-weight: 800;
+                font-weight: 700;
                 font-size: 1.5rem;
-                color: var(--primary-dark);
+                color: var(--text-dark);
                 letter-spacing: -0.5px;
             }
 
@@ -166,7 +179,7 @@
             }
 
             .navbar-burger {
-                color: var(--primary-dark);
+                color: var(--text-dark);
                 transition: all 0.3s ease;
                 background: none;
                 border: none;
@@ -178,7 +191,7 @@
             }
 
             .navbar-burger:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.08), rgba(168, 144, 120, 0.12));
             }
 
             .navbar-menu {
@@ -200,9 +213,9 @@
                 background: white;
                 border-radius: 20px;
                 margin-bottom: 2rem;
-                box-shadow: var(--shadow-sm);
+                box-shadow: var(--shadow-soft);
                 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                border: 1px solid rgba(193, 120, 23, 0.08);
+                border: 1px solid var(--border-soft);
                 overflow: hidden;
                 animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             }
@@ -219,20 +232,20 @@
             }
 
             .propuesta-card:hover {
-                transform: translateY(-8px);
-                box-shadow: var(--shadow-lg);
+                transform: translateY(-6px);
+                box-shadow: var(--shadow-hover);
             }
 
             .propuesta-card .card-header {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.06), rgba(232, 159, 60, 0.10));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.06), rgba(168, 144, 120, 0.10));
                 padding: 2rem 2.5rem;
-                border-bottom: 2px solid rgba(193, 120, 23, 0.12);
+                border-bottom: 2px solid var(--border-soft);
             }
 
             .propuesta-card .card-header-title {
-                color: var(--primary-dark);
-                font-weight: 800;
-                font-size: 1.5rem;
+                color: var(--text-dark);
+                font-weight: 700;
+                font-size: 1.4rem;
                 display: flex;
                 align-items: center;
                 gap: 1rem;
@@ -241,12 +254,12 @@
 
             .propuesta-card .card-header-title i {
                 color: var(--primary);
-                font-size: 1.75rem;
+                font-size: 1.5rem;
             }
 
             .propuesta-card .card-content {
                 padding: 2.5rem;
-                color: #374151;
+                color: var(--text-medium);
                 line-height: 1.8;
             }
 
@@ -257,8 +270,8 @@
             }
 
             .propuesta-card .card-footer {
-                border-top: 1px solid rgba(193, 120, 23, 0.08);
-                background: linear-gradient(135deg, rgba(250, 250, 250, 0.3), rgba(243, 244, 246, 0.5));
+                border-top: 1px solid var(--border-soft);
+                background: linear-gradient(135deg, rgba(250, 248, 245, 0.5), rgba(245, 242, 238, 0.7));
                 padding: 1.5rem;
                 display: flex;
                 justify-content: center;
@@ -270,7 +283,7 @@
             .btn-action {
                 padding: 0.875rem 1.75rem;
                 color: white;
-                font-weight: 700;
+                font-weight: 600;
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
@@ -285,31 +298,31 @@
             }
 
             .btn-edit {
-                background: linear-gradient(135deg, var(--primary), var(--primary-light));
+                background: linear-gradient(145deg, var(--primary), var(--primary-light));
             }
 
             .btn-edit:hover {
-                background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+                background: linear-gradient(145deg, var(--primary-dark), var(--primary));
                 color: white;
                 transform: translateY(-2px);
-                box-shadow: var(--shadow-md);
+                box-shadow: var(--shadow-soft);
             }
 
             .btn-delete {
-                background: linear-gradient(135deg, #DC2626, #EF4444);
+                background: linear-gradient(145deg, var(--delete-color), var(--delete-light));
             }
 
             .btn-delete:hover {
-                background: linear-gradient(135deg, #991B1B, #DC2626);
+                background: linear-gradient(145deg, #7F0000, var(--delete-color));
                 color: white;
                 transform: translateY(-2px);
-                box-shadow: var(--shadow-md);
+                box-shadow: var(--shadow-soft);
             }
 
             .loading-spinner {
                 width: 56px;
                 height: 56px;
-                border: 5px solid rgba(193, 120, 23, 0.12);
+                border: 5px solid rgba(139, 115, 85, 0.12);
                 border-top: 5px solid var(--primary);
                 border-radius: 50%;
                 animation: spin 0.7s linear infinite;
@@ -325,7 +338,7 @@
 
             .notification {
                 border-radius: 16px;
-                box-shadow: var(--shadow-sm);
+                box-shadow: var(--shadow-soft);
                 border-left: 5px solid;
                 font-weight: 600;
                 animation: fadeIn 0.4s ease;
@@ -343,15 +356,15 @@
             }
 
             .notification.is-warning {
-                border-left-color: #F59E0B;
-                background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
-                color: #92400E;
+                border-left-color: var(--warning-text);
+                background: var(--warning-bg);
+                color: var(--warning-text);
             }
 
             .notification.is-danger {
-                border-left-color: #DC2626;
-                background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
-                color: #991B1B;
+                border-left-color: var(--error-text);
+                background: var(--error-bg);
+                color: var(--error-text);
             }
 
             .meta-info {
@@ -360,16 +373,16 @@
                 flex-wrap: wrap;
                 margin-top: 1.5rem;
                 padding-top: 1.5rem;
-                border-top: 1px solid rgba(193, 120, 23, 0.08);
+                border-top: 1px solid var(--border-soft);
             }
 
             .meta-item {
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
-                color: #6B7280;
+                color: var(--text-light);
                 font-size: 0.95rem;
-                font-weight: 600;
+                font-weight: 500;
             }
 
             .meta-item i {
@@ -378,8 +391,8 @@
             }
 
             .meta-item strong {
-                color: var(--primary-dark);
-                font-weight: 700;
+                color: var(--text-dark);
+                font-weight: 600;
             }
 
             @media (max-width: 1024px) {
@@ -515,7 +528,7 @@
                         </a>
                         <div class="navbar-dropdown is-right" id="menuDropdown">
 
-                            <a class="navbar-item" href="perfil.jsp?correo=<%= correoEncoded%>">
+                            <a class="navbar-item" href="front.jsp?correo=<%= correoEncoded%>">
                                 <i class="fas fa-home"></i>
                                 <span class="ml-2">Inicio</span>
                             </a>
@@ -524,7 +537,7 @@
                                 <i class="fas fa-plus"></i>
                                 <span>Nueva Propuesta</span>
                             </a>
-                            <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid rgba(193, 120, 23, 0.08);">
+                            <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid var(--border-soft);">
                             <a class="navbar-item" href="login.jsp">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Cerrar Sesión</span>
@@ -728,7 +741,7 @@
                 }
 
                 console.log('🗑️ Eliminando propuesta: ' + propuestaId);
-                
+
                 try {
                     const deleteURL = "http://localhost:8080/propuesta-ms/propuestas/" + propuestaId;
                     console.log('🔗 URL de eliminación: ' + deleteURL);
@@ -753,7 +766,6 @@
 
                     if (result.success) {
                         alert('✅ Propuesta eliminada exitosamente');
-                        // Recargar la página completa
                         window.location.reload();
                     } else {
                         alert('❌ Error: ' + (result.message || 'No se pudo eliminar la propuesta'));

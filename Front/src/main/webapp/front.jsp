@@ -12,18 +12,31 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         <style>
+            /* Paleta de colores suave para adultos mayores */
             :root {
-                --primary: #C17817;
-                --primary-dark: #8B5A0F;
-                --primary-light: #E89F3C;
-                --bg-main: #FAFAFA;
-                --shadow-sm: 0 4px 12px rgba(193, 120, 23, 0.08);
-                --shadow-md: 0 12px 28px rgba(193, 120, 23, 0.12);
-                --shadow-lg: 0 20px 48px rgba(193, 120, 23, 0.15);
+                --primary: #8B7355;
+                --primary-dark: #6B5344;
+                --primary-light: #A89078;
+                --primary-soft: #C4B5A5;
+                --bg-main: #FAF8F5;
+                --bg-warm: #F5F2EE;
+                --card-bg: #FFFFFF;
+                --text-dark: #4A4A4A;
+                --text-medium: #6B6B6B;
+                --text-light: #8B8B8B;
+                --border-soft: rgba(139, 115, 85, 0.12);
+                --shadow-soft: 0 4px 20px rgba(107, 83, 68, 0.08);
+                --shadow-hover: 0 12px 36px rgba(107, 83, 68, 0.14);
+                --warning-bg: #FFF8E1;
+                --warning-text: #F57C00;
+                --warning-border: #FFE082;
+                --error-bg: #FFEBEE;
+                --error-text: #C62828;
+                --error-border: #EF9A9A;
             }
 
             body {
-                background: linear-gradient(135deg, #FAFAFA 0%, #F3F4F6 100%);
+                background: linear-gradient(145deg, var(--bg-main) 0%, var(--bg-warm) 100%);
                 min-height: 100vh;
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 position: relative;
@@ -36,30 +49,27 @@
                 left: -10%;
                 width: 600px;
                 height: 600px;
-                background: radial-gradient(circle, rgba(193, 120, 23, 0.03) 0%, transparent 70%);
+                background: radial-gradient(circle, rgba(139, 115, 85, 0.04) 0%, transparent 70%);
                 border-radius: 50%;
                 animation: float 25s ease-in-out infinite;
             }
 
             @keyframes float {
-                0%, 100% {
-                    transform: translate(0, 0);
-                }
-                50% {
-                    transform: translate(30px, 30px);
-                }
+                0%, 100% { transform: translate(0, 0); }
+                50% { transform: translate(30px, 30px); }
             }
 
+            /* Navbar con estilo suave */
             .navbar {
                 background: white;
-                box-shadow: var(--shadow-sm);
-                border-bottom: 1px solid rgba(193, 120, 23, 0.08);
+                box-shadow: var(--shadow-soft);
+                border-bottom: 1px solid var(--border-soft);
                 backdrop-filter: blur(20px);
             }
 
             .navbar-item {
-                color: var(--primary-dark);
-                font-weight: 700;
+                color: var(--text-dark);
+                font-weight: 600;
                 transition: all 0.3s ease;
                 border-radius: 10px;
                 margin: 0 0.25rem;
@@ -68,26 +78,26 @@
             }
 
             .navbar-item:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.08), rgba(168, 144, 120, 0.12));
                 color: var(--primary);
                 transform: translateY(-2px);
             }
 
             .navbar-link {
-                color: var(--primary-dark);
-                font-weight: 700;
+                color: var(--text-dark);
+                font-weight: 600;
                 border-radius: 10px;
                 transition: all 0.3s ease;
             }
 
             .navbar-link:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.08), rgba(168, 144, 120, 0.12));
             }
 
             .navbar-dropdown {
                 background: white;
-                border: 1px solid rgba(193, 120, 23, 0.08);
-                box-shadow: var(--shadow-md);
+                border: 1px solid var(--border-soft);
+                box-shadow: var(--shadow-hover);
                 border-radius: 16px;
                 padding: 0.75rem;
                 margin-top: 0.5rem;
@@ -114,7 +124,7 @@
                 padding: 0.875rem 1.5rem;
                 margin: 0.25rem;
                 border-radius: 10px;
-                font-weight: 600;
+                font-weight: 500;
             }
 
             .navbar-dropdown .navbar-item:hover {
@@ -129,9 +139,9 @@
             }
 
             .navbar-title {
-                font-weight: 800;
+                font-weight: 700;
                 font-size: 1.5rem;
-                color: var(--primary-dark);
+                color: var(--text-dark);
                 letter-spacing: -0.5px;
             }
 
@@ -143,13 +153,14 @@
                 z-index: 1;
             }
 
+            /* Cards con animaciones suaves */
             .propuesta-card {
                 background: white;
                 border-radius: 20px;
                 margin-bottom: 2rem;
-                box-shadow: var(--shadow-sm);
+                box-shadow: var(--shadow-soft);
                 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                border: 1px solid rgba(193, 120, 23, 0.08);
+                border: 1px solid var(--border-soft);
                 overflow: hidden;
                 animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             }
@@ -166,20 +177,20 @@
             }
 
             .propuesta-card:hover {
-                transform: translateY(-8px);
-                box-shadow: var(--shadow-lg);
+                transform: translateY(-6px);
+                box-shadow: var(--shadow-hover);
             }
 
             .propuesta-card .card-header {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.06), rgba(232, 159, 60, 0.10));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.06), rgba(168, 144, 120, 0.10));
                 padding: 2rem 2.5rem;
-                border-bottom: 2px solid rgba(193, 120, 23, 0.12);
+                border-bottom: 2px solid var(--border-soft);
             }
 
             .propuesta-card .card-header-title {
-                color: var(--primary-dark);
-                font-weight: 800;
-                font-size: 1.5rem;
+                color: var(--text-dark);
+                font-weight: 700;
+                font-size: 1.4rem;
                 display: flex;
                 align-items: center;
                 gap: 1rem;
@@ -188,12 +199,12 @@
 
             .propuesta-card .card-header-title i {
                 color: var(--primary);
-                font-size: 1.75rem;
+                font-size: 1.5rem;
             }
 
             .propuesta-card .card-content {
                 padding: 2.5rem;
-                color: #374151;
+                color: var(--text-medium);
                 line-height: 1.8;
             }
 
@@ -204,8 +215,8 @@
             }
 
             .propuesta-card .card-footer {
-                border-top: 1px solid rgba(193, 120, 23, 0.08);
-                background: linear-gradient(135deg, rgba(250, 250, 250, 0.3), rgba(243, 244, 246, 0.5));
+                border-top: 1px solid var(--border-soft);
+                background: linear-gradient(135deg, rgba(250, 248, 245, 0.5), rgba(245, 242, 238, 0.7));
                 padding: 0;
                 display: flex;
                 align-items: center;
@@ -215,7 +226,7 @@
             .propuesta-card .card-footer-item {
                 padding: 1.25rem 2rem;
                 color: var(--primary);
-                font-weight: 700;
+                font-weight: 600;
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
@@ -223,7 +234,7 @@
                 font-size: 0.95rem;
                 flex: 1;
                 justify-content: center;
-                border-right: 1px solid rgba(193, 120, 23, 0.08);
+                border-right: 1px solid var(--border-soft);
             }
 
             .propuesta-card .card-footer-item:last-child {
@@ -231,17 +242,18 @@
             }
 
             .propuesta-card .card-footer-item:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.08), rgba(168, 144, 120, 0.12));
                 color: var(--primary-dark);
             }
 
+            /* Botón de donación con color suave */
             .btn-donation {
-                background: linear-gradient(135deg, var(--primary-light), var(--primary));
+                background: linear-gradient(145deg, var(--primary-light), var(--primary));
                 color: white;
                 border: none;
                 padding: 1.25rem 2rem;
                 border-radius: 0;
-                font-weight: 700;
+                font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
                 display: flex;
@@ -253,16 +265,16 @@
             }
 
             .btn-donation:hover {
-                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                background: linear-gradient(145deg, var(--primary), var(--primary-dark));
                 color: white;
                 transform: scale(1.02);
-                box-shadow: 0 8px 16px rgba(193, 120, 23, 0.25);
+                box-shadow: 0 8px 16px rgba(139, 115, 85, 0.25);
             }
 
             .loading-spinner {
                 width: 56px;
                 height: 56px;
-                border: 5px solid rgba(193, 120, 23, 0.12);
+                border: 5px solid rgba(139, 115, 85, 0.12);
                 border-top: 5px solid var(--primary);
                 border-radius: 50%;
                 animation: spin 0.7s linear infinite;
@@ -271,14 +283,12 @@
             }
 
             @keyframes spin {
-                to {
-                    transform: rotate(360deg);
-                }
+                to { transform: rotate(360deg); }
             }
 
             .notification {
                 border-radius: 16px;
-                box-shadow: var(--shadow-sm);
+                box-shadow: var(--shadow-soft);
                 border-left: 5px solid;
                 font-weight: 600;
                 animation: fadeIn 0.4s ease;
@@ -296,15 +306,15 @@
             }
 
             .notification.is-warning {
-                border-left-color: #F59E0B;
-                background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
-                color: #92400E;
+                border-left-color: var(--warning-text);
+                background: var(--warning-bg);
+                color: var(--warning-text);
             }
 
             .notification.is-danger {
-                border-left-color: #DC2626;
-                background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
-                color: #991B1B;
+                border-left-color: var(--error-text);
+                background: var(--error-bg);
+                color: var(--error-text);
             }
 
             .button-as-link {
@@ -323,11 +333,11 @@
                 width: 100%;
                 text-align: left;
                 margin: 0.25rem;
-                font-weight: 600;
+                font-weight: 500;
             }
 
             .button-as-link:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.08), rgba(168, 144, 120, 0.12));
                 transform: translateX(5px);
             }
 
@@ -337,16 +347,16 @@
                 flex-wrap: wrap;
                 margin-top: 1.5rem;
                 padding-top: 1.5rem;
-                border-top: 1px solid rgba(193, 120, 23, 0.08);
+                border-top: 1px solid var(--border-soft);
             }
 
             .meta-item {
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
-                color: #6B7280;
+                color: var(--text-light);
                 font-size: 0.95rem;
-                font-weight: 600;
+                font-weight: 500;
             }
 
             .meta-item i {
@@ -355,17 +365,17 @@
             }
 
             .meta-item strong {
-                color: var(--primary-dark);
-                font-weight: 700;
+                color: var(--text-dark);
+                font-weight: 600;
             }
 
             .navbar-burger {
-                color: var(--primary-dark);
+                color: var(--text-dark);
                 transition: all 0.3s ease;
             }
 
             .navbar-burger:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                background: linear-gradient(135deg, rgba(139, 115, 85, 0.08), rgba(168, 144, 120, 0.12));
             }
 
             @media (max-width: 768px) {
@@ -375,7 +385,7 @@
 
                 .navbar-menu {
                     background: white;
-                    box-shadow: var(--shadow-md);
+                    box-shadow: var(--shadow-hover);
                     border-radius: 0 0 16px 16px;
                 }
 

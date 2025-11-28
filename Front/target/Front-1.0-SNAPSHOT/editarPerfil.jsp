@@ -8,33 +8,48 @@
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
         <style>
+            /* Paleta de colores suave para adultos mayores */
             :root {
-                --primary: #C17817;
-                --primary-dark: #8B5A0F;
-                --primary-light: #E89F3C;
-                --bg-main: #FAFAFA;
+                --primary: #8B7355;
+                --primary-dark: #6B5344;
+                --primary-light: #A89078;
+                --primary-soft: #C4B5A5;
+                --bg-main: #FAF8F5;
+                --bg-warm: #F5F2EE;
                 --card-bg: #FFFFFF;
-                --shadow-sm: 0 2px 8px rgba(193, 120, 23, 0.08);
-                --shadow-md: 0 8px 24px rgba(193, 120, 23, 0.12);
-                --shadow-lg: 0 16px 40px rgba(193, 120, 23, 0.15);
+                --text-dark: #4A4A4A;
+                --text-medium: #6B6B6B;
+                --text-light: #8B8B8B;
+                --border-soft: rgba(139, 115, 85, 0.12);
+                --shadow-soft: 0 4px 20px rgba(107, 83, 68, 0.08);
+                --shadow-hover: 0 8px 32px rgba(107, 83, 68, 0.12);
+                --success-bg: #E8F5E9;
+                --success-text: #2E7D32;
+                --success-border: #A5D6A7;
+                --error-bg: #FFEBEE;
+                --error-text: #C62828;
+                --error-border: #EF9A9A;
             }
 
             body {
-                background: var(--bg-main);
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(145deg, var(--bg-main) 0%, var(--bg-warm) 100%);
+                font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 min-height: 100vh;
             }
 
             .navbar {
                 background: white;
-                box-shadow: var(--shadow-sm);
-                border-bottom: 1px solid rgba(193, 120, 23, 0.1);
+                box-shadow: var(--shadow-soft);
+                border-bottom: 1px solid var(--border-soft);
             }
 
             .navbar-item {
-                color: var(--primary-dark);
+                color: var(--text-dark);
                 font-weight: 600;
                 transition: all 0.3s ease;
                 border-radius: 8px;
@@ -42,7 +57,7 @@
             }
 
             .navbar-item:hover {
-                background-color: rgba(193, 120, 23, 0.1);
+                background-color: rgba(139, 115, 85, 0.1);
                 color: var(--primary);
                 transform: translateX(-3px);
             }
@@ -59,14 +74,26 @@
                 max-width: 1200px;
                 margin: 2.5rem auto;
                 padding: 0 1.5rem;
+                animation: fadeInUp 0.6s ease-out;
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .page-header {
-                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                background: linear-gradient(145deg, var(--primary) 0%, var(--primary-light) 100%);
                 border-radius: 20px;
                 padding: 2.5rem 2rem;
                 margin-bottom: 2.5rem;
-                box-shadow: var(--shadow-lg);
+                box-shadow: var(--shadow-hover);
                 color: white;
                 text-align: center;
             }
@@ -86,8 +113,8 @@
                 background: white;
                 border-radius: 16px;
                 padding: 2.5rem;
-                box-shadow: var(--shadow-sm);
-                border: 1px solid rgba(193, 120, 23, 0.1);
+                box-shadow: var(--shadow-soft);
+                border: 1px solid var(--border-soft);
             }
 
             .section-header {
@@ -96,13 +123,13 @@
                 gap: 1rem;
                 margin-bottom: 2rem;
                 padding-bottom: 1.5rem;
-                border-bottom: 2px solid rgba(193, 120, 23, 0.1);
+                border-bottom: 2px solid var(--border-soft);
             }
 
             .section-icon {
                 width: 48px;
                 height: 48px;
-                background: linear-gradient(135deg, var(--primary), var(--primary-light));
+                background: linear-gradient(145deg, var(--primary), var(--primary-light));
                 border-radius: 12px;
                 display: flex;
                 align-items: center;
@@ -117,7 +144,7 @@
             .section-title {
                 font-size: 1.5rem;
                 font-weight: 700;
-                color: var(--primary-dark);
+                color: var(--text-dark);
             }
 
             .field-grid {
@@ -133,6 +160,15 @@
 
             .custom-field {
                 position: relative;
+                min-height: 100px;
+            }
+
+            .custom-label {
+                color: var(--text-dark);
+                font-weight: 600;
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+                display: block;
             }
 
             .field-icon {
@@ -152,20 +188,21 @@
             .custom-select {
                 width: 100%;
                 padding: 0.875rem 1rem 0.875rem 3rem;
-                border: 2px solid rgba(193, 120, 23, 0.2);
+                border: 2px solid var(--border-soft);
                 border-radius: 10px;
                 font-size: 1rem;
                 transition: all 0.3s ease;
-                background: white;
-                color: var(--primary-dark);
+                background: var(--bg-warm);
+                color: var(--text-dark);
             }
 
             .custom-input:focus,
             .custom-select:focus {
                 outline: none;
                 border-color: var(--primary);
-                box-shadow: 0 0 0 3px rgba(193, 120, 23, 0.1);
+                box-shadow: 0 0 0 4px rgba(139, 115, 85, 0.1);
                 transform: translateY(-2px);
+                background: white;
             }
 
             .custom-input:hover,
@@ -176,14 +213,14 @@
             .custom-select {
                 cursor: pointer;
                 appearance: none;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23C17817' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238B7355' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
                 background-repeat: no-repeat;
                 background-position: right 1rem center;
                 padding-right: 2.5rem;
             }
 
             .non-editable {
-                background-color: #F3F4F6;
+                background-color: #F0EDE8;
                 cursor: not-allowed;
                 opacity: 0.7;
             }
@@ -202,19 +239,13 @@
                 align-items: center;
             }
 
-            .custom-field {
-                position: relative;
-                min-height: 100px; 
-            }
-
-
             .buttons-section {
                 display: flex;
                 gap: 1rem;
                 justify-content: flex-end;
                 margin-top: 2.5rem;
                 padding-top: 2rem;
-                border-top: 2px solid rgba(193, 120, 23, 0.1);
+                border-top: 2px solid var(--border-soft);
             }
 
             .form-button {
@@ -232,31 +263,31 @@
             }
 
             .button-primary {
-                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                background: linear-gradient(145deg, var(--primary) 0%, var(--primary-light) 100%);
                 color: white;
-                box-shadow: 0 4px 12px rgba(193, 120, 23, 0.2);
+                box-shadow: 0 4px 12px rgba(139, 115, 85, 0.2);
             }
 
             .button-primary:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(193, 120, 23, 0.3);
+                box-shadow: 0 8px 20px rgba(139, 115, 85, 0.3);
             }
 
             .button-secondary {
-                background: linear-gradient(135deg, #64748B 0%, #94A3B8 100%);
+                background: linear-gradient(145deg, #78909C 0%, #90A4AE 100%);
                 color: white;
-                box-shadow: 0 4px 12px rgba(100, 116, 139, 0.2);
+                box-shadow: 0 4px 12px rgba(120, 144, 156, 0.2);
             }
 
             .button-secondary:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(100, 116, 139, 0.3);
+                box-shadow: 0 8px 20px rgba(120, 144, 156, 0.3);
             }
 
             .loading-spinner {
                 width: 32px;
                 height: 32px;
-                border: 4px solid rgba(193, 120, 23, 0.2);
+                border: 4px solid rgba(139, 115, 85, 0.2);
                 border-top: 4px solid var(--primary);
                 border-radius: 50%;
                 animation: spin 0.8s linear infinite;
@@ -291,19 +322,19 @@
             }
 
             .message-success {
-                background: #ECFDF5;
-                color: #065F46;
-                border: 1px solid #A7F3D0;
+                background: var(--success-bg);
+                color: var(--success-text);
+                border: 1px solid var(--success-border);
             }
 
             .message-error {
-                background: #FEF2F2;
-                color: #991B1B;
-                border: 1px solid #FECACA;
+                background: var(--error-bg);
+                color: var(--error-text);
+                border: 1px solid var(--error-border);
             }
 
             .required-indicator {
-                color: #EF4444;
+                color: var(--error-text);
                 margin-left: 0.25rem;
             }
 
@@ -701,7 +732,6 @@
 
             console.log('🎯 Script de edición de perfil cargado completamente');
         </script>
-
     </body>
 </html>
 
