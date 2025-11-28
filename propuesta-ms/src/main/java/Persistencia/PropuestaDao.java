@@ -14,10 +14,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
- *
- * @author esteb
- */
+
 public class PropuestaDao {
 
     static final String URL = "jdbc:postgresql://localhost:5432/ProyectoDS";
@@ -146,14 +143,13 @@ public class PropuestaDao {
                     int idPropuesta = rs.getInt("idpropuesta");
                     String titulo = rs.getString("titulo");
                     String descripcion = rs.getString("descripcion");
-                    Date fechaCreacionSQL = rs.getDate("fechacreacion"); // Lee java.sql.Date
+                    Date fechaCreacionSQL = rs.getDate("fechacreacion");
                     int idUsuario = rs.getInt("idusuario");
 
                     Propuesta p = new Propuesta(idPropuesta, titulo, descripcion, idUsuario);
 
-                    // Conversión de java.sql.Date a java.time.LocalDate
                     if (fechaCreacionSQL != null) {
-                        p.setFechacreacion(fechaCreacionSQL.toLocalDate()); // Convierte y asigna
+                        p.setFechacreacion(fechaCreacionSQL.toLocalDate()); 
                     }
 
                     lista.add(p);
@@ -167,6 +163,7 @@ public class PropuestaDao {
 
         return lista;
     }
+
     public List<Propuesta> findPropuestasByUsuario(int usuarioId) throws SQLException {
         System.out.println("[DEBUG] PropuestaDao.findPropuestasByUsuario - Buscando propuestas para usuario ID: " + usuarioId);
 
@@ -201,7 +198,6 @@ public class PropuestaDao {
 
                 Propuesta p = new Propuesta(idPropuesta, titulo, descripcion, idUsuario);
 
-                // Conversión de java.sql.Date a java.time.LocalDate
                 if (fechaCreacionSQL != null) {
                     p.setFechacreacion(fechaCreacionSQL.toLocalDate());
                 }
@@ -235,5 +231,159 @@ public class PropuestaDao {
         }
 
         return lista;
+    }
+
+    public Propuesta findPropuestaById(int idPropuesta) throws SQLException {
+        System.out.println("[DEBUG] PropuestaDao.findPropuestaById - Buscando propuesta ID: " + idPropuesta);
+
+        String sql = "SELECT idpropuesta, titulo, descripcion, fechacreacion, idusuario FROM propuesta WHERE idpropuesta = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            datos conbd = new datos(URL, USER, PASSWORD);
+            conn = conbd.getConn();
+
+            if (conn == null) {
+                throw new SQLException("No se pudo establecer conexión a la base de datos");
+            }
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idPropuesta);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("idpropuesta");
+                String titulo = rs.getString("titulo");
+                String descripcion = rs.getString("descripcion");
+                Date fechaCreacionSQL = rs.getDate("fechacreacion");
+                int idUsuario = rs.getInt("idusuario");
+
+                Propuesta propuesta = new Propuesta(id, titulo, descripcion, idUsuario);
+
+                if (fechaCreacionSQL != null) {
+                    propuesta.setFechacreacion(fechaCreacionSQL.toLocalDate());
+                }
+
+                System.out.println("[DEBUG] Propuesta encontrada: " + titulo);
+                return propuesta;
+            } else {
+                System.out.println("[DEBUG] No se encontró propuesta con ID: " + idPropuesta);
+                return null;
+            }
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("[ERROR] Driver PostgreSQL no encontrado: " + e.getMessage());
+            throw new SQLException("Driver PostgreSQL no encontrado", e);
+        } catch (SQLException e) {
+            System.out.println("[ERROR] Error SQL en findPropuestaById: " + e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("[ERROR] Error al cerrar conexión: " + e.getMessage());
+            }
+        }
+    }
+
+    public boolean updatePropuesta(Propuesta propuesta) throws SQLException {
+        System.out.println("[DEBUG] PropuestaDao.updatePropuesta - Actualizando propuesta ID: " + propuesta.getId());
+
+        String sql = "UPDATE propuesta SET titulo = ?, descripcion = ? WHERE idpropuesta = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            datos conbd = new datos(URL, USER, PASSWORD);
+            conn = conbd.getConn();
+
+            if (conn == null) {
+                throw new SQLException("No se pudo establecer conexión a la base de datos");
+            }
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, propuesta.getTitulo());
+            stmt.setString(2, propuesta.getContenido());
+            stmt.setInt(3, propuesta.getId());
+
+            int rowsAffected = stmt.executeUpdate();
+            System.out.println("[DEBUG] Filas afectadas en actualización: " + rowsAffected);
+
+            return rowsAffected > 0;
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("[ERROR] Driver PostgreSQL no encontrado: " + e.getMessage());
+            throw new SQLException("Driver PostgreSQL no encontrado", e);
+        } catch (SQLException e) {
+            System.out.println("[ERROR] Error SQL en updatePropuesta: " + e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("[ERROR] Error al cerrar conexión: " + e.getMessage());
+            }
+        }
+    }
+
+    public boolean deletePropuesta(int idPropuesta) throws SQLException {
+        System.out.println("[DEBUG] PropuestaDao.deletePropuesta - Eliminando propuesta ID: " + idPropuesta);
+
+        String sql = "DELETE FROM propuesta WHERE idpropuesta = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            datos conbd = new datos(URL, USER, PASSWORD);
+            conn = conbd.getConn();
+
+            if (conn == null) {
+                throw new SQLException("No se pudo establecer conexión a la base de datos");
+            }
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idPropuesta);
+
+            int rowsAffected = stmt.executeUpdate();
+            System.out.println("[DEBUG] Filas afectadas en eliminación: " + rowsAffected);
+
+            return rowsAffected > 0;
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("[ERROR] Driver PostgreSQL no encontrado: " + e.getMessage());
+            throw new SQLException("Driver PostgreSQL no encontrado", e);
+        } catch (SQLException e) {
+            System.out.println("[ERROR] Error SQL en deletePropuesta: " + e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("[ERROR] Error al cerrar conexión: " + e.getMessage());
+            }
+        }
     }
 }

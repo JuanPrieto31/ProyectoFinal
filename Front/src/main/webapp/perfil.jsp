@@ -568,7 +568,6 @@
 
                 backButton.href = 'front.jsp?correo=' + encodeURIComponent(correo);
 
-                // ✅ VERSIÓN MEJORADA con manejo de errores
                 await cargarPerfilUsuario();
 
                 function showMessage(message, type) {
@@ -621,7 +620,6 @@
                         const result = await response.json();
                         console.log('📋 Respuesta del servidor:', result);
 
-                        // ✅ Verificación mejorada de la respuesta
                         if (result && result.success !== undefined) {
                             if (result.success && result.usuario) {
                                 console.log('✅ Usuario encontrado:', result.usuario);
@@ -668,7 +666,6 @@
                     }
                 }
 
-                // ✅ Función de respaldo por si falla el nuevo endpoint
                 async function usarMetodoLegacy() {
                     console.log('🔄 Intentando método legacy...');
                     loadingSection.innerHTML = '<div class="loading-spinner" style="display: block;"></div><p>Intentando con método anterior...</p>';

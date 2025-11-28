@@ -96,9 +96,9 @@ public class PropuestaControl extends HttpServlet {
                 System.out.println("Correo recibido: " + correo);
 
                 JsonObject usuarioResponse = obtenerUsuarioPorCorreo(correo);
-                
-                System.out.println("Respuesta completa del servicio: " + 
-                    (usuarioResponse != null ? usuarioResponse.toString() : "NULL"));
+
+                System.out.println("Respuesta completa del servicio: "
+                        + (usuarioResponse != null ? usuarioResponse.toString() : "NULL"));
 
                 // Validar respuesta del servicio
                 if (usuarioResponse == null) {
@@ -144,7 +144,7 @@ public class PropuestaControl extends HttpServlet {
                 }
 
                 JsonElement usuarioElement = usuarioResponse.get("usuario");
-                
+
                 if (usuarioElement == null || usuarioElement.isJsonNull() || !usuarioElement.isJsonObject()) {
                     respuesta.addProperty("success", false);
                     respuesta.addProperty("mensaje", "El campo 'usuario' no es un objeto JSON válido");
@@ -167,7 +167,7 @@ public class PropuestaControl extends HttpServlet {
                 }
 
                 JsonElement idUsuarioElement = usuarioObj.get("idusuario");
-                
+
                 if (idUsuarioElement == null || idUsuarioElement.isJsonNull()) {
                     respuesta.addProperty("success", false);
                     respuesta.addProperty("mensaje", "El campo 'idusuario' es null");
@@ -197,7 +197,7 @@ public class PropuestaControl extends HttpServlet {
         } catch (Exception e) {
             System.err.println("ERROR CAPTURADO: " + e.getMessage());
             e.printStackTrace();
-            
+
             respuesta = new JsonObject();
             respuesta.addProperty("success", false);
             respuesta.addProperty("mensaje", "Error interno: " + e.getMessage());
@@ -249,7 +249,7 @@ public class PropuestaControl extends HttpServlet {
         } catch (Exception e) {
             System.err.println("Error al llamar servicio de usuarios: " + e.getMessage());
             e.printStackTrace();
-            
+
             JsonObject error = new JsonObject();
             error.addProperty("success", false);
             error.addProperty("mensaje", "Error al conectar con servicio de usuarios: " + e.getMessage());
@@ -276,6 +276,102 @@ public class PropuestaControl extends HttpServlet {
             respuesta.addProperty("success", false);
             respuesta.addProperty("mensaje", "Endpoint POST no encontrado");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        enviar(response, respuesta);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        setCorsHeaders(response);
+        response.setContentType("application/json;charset=UTF-8");
+
+        JsonObject json = leerJson(request, response);
+        String path = request.getPathInfo();
+        JsonObject respuesta;
+
+        try {
+            if (path == null || "/".equals(path)) {
+                respuesta = ps.actualizar(json);
+                if (respuesta.get("success").getAsBoolean()) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
+            } else {
+                // Manejar rutas con ID: /propuestas/123
+                String[] pathParts = path.split("/");
+                if (pathParts.length >= 2) {
+                    String id = pathParts[1];
+                    json.addProperty("id", Integer.parseInt(id));
+                    respuesta = ps.actualizar(json);
+                    if (respuesta.get("success").getAsBoolean()) {
+                        response.setStatus(HttpServletResponse.SC_OK);
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    }
+                } else {
+                    respuesta = new JsonObject();
+                    respuesta.addProperty("success", false);
+                    respuesta.addProperty("mensaje", "Endpoint PUT no encontrado");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                }
+            }
+        } catch (Exception e) {
+            respuesta = new JsonObject();
+            respuesta.addProperty("success", false);
+            respuesta.addProperty("mensaje", "Error interno: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+
+        enviar(response, respuesta);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        setCorsHeaders(response);
+        response.setContentType("application/json;charset=UTF-8");
+
+        JsonObject json = leerJson(request, response);
+        String path = request.getPathInfo();
+        JsonObject respuesta;
+
+        try {
+            if (path == null || "/".equals(path)) {
+                respuesta = ps.eliminar(json);
+                if (respuesta.get("success").getAsBoolean()) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
+            } else {
+                // Manejar rutas con ID: /propuestas/123
+                String[] pathParts = path.split("/");
+                if (pathParts.length >= 2) {
+                    String id = pathParts[1];
+                    json.addProperty("id", Integer.parseInt(id));
+                    respuesta = ps.eliminar(json);
+                    if (respuesta.get("success").getAsBoolean()) {
+                        response.setStatus(HttpServletResponse.SC_OK);
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    }
+                } else {
+                    respuesta = new JsonObject();
+                    respuesta.addProperty("success", false);
+                    respuesta.addProperty("mensaje", "Endpoint DELETE no encontrado");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                }
+            }
+        } catch (Exception e) {
+            respuesta = new JsonObject();
+            respuesta.addProperty("success", false);
+            respuesta.addProperty("mensaje", "Error interno: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
         enviar(response, respuesta);

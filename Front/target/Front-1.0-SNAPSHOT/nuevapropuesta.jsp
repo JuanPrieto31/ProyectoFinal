@@ -31,30 +31,111 @@
             body {
                 background-color: var(--bg-light);
                 color: var(--text-primary);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
             }
 
-            /* Navbar personalizada */
-            .navbar.is-transparent {
-                box-shadow: 0 2px 0 0 var(--border-light);
+            /* Navbar mejorada */
+            .custom-navbar {
+                background: white;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+                border-bottom: 1px solid var(--border-light);
+                padding: 0 1.5rem;
             }
 
             .navbar-brand .navbar-item {
-                font-weight: 600;
+                font-weight: 700;
                 color: var(--text-primary) !important;
+                font-size: 1.2rem;
             }
 
             .navbar-brand .navbar-item:hover {
                 color: var(--primary-color) !important;
+                background: transparent !important;
             }
 
-            /* Contenedor principal */
+            .navbar-item {
+                color: var(--text-primary);
+                font-weight: 600;
+                transition: all 0.3s ease;
+                border-radius: 6px;
+                margin: 0 0.25rem;
+            }
+
+            .navbar-item:hover {
+                background: rgba(193, 120, 23, 0.08) !important;
+                color: var(--primary-color) !important;
+            }
+
+            .navbar-link {
+                color: var(--text-primary);
+                font-weight: 600;
+            }
+
+            .navbar-dropdown {
+                border: 1px solid var(--border-light);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                padding: 0.5rem;
+            }
+
+            .navbar-dropdown .navbar-item {
+                border-radius: 4px;
+            }
+
+            .navbar-burger {
+                color: var(--text-primary);
+            }
+
+            /* Fix para el menú hamburguesa */
+            .navbar-menu {
+                box-shadow: none;
+            }
+
+            @media screen and (max-width: 1023px) {
+                .navbar-menu {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 100%;
+                    background: white;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                    display: none;
+                    z-index: 1000;
+                }
+                
+                .navbar-menu.is-active {
+                    display: block;
+                }
+                
+                .navbar-end {
+                    width: 100%;
+                }
+                
+                .navbar-item.has-dropdown {
+                    width: 100%;
+                }
+                
+                .navbar-dropdown {
+                    position: static;
+                    width: 100%;
+                    box-shadow: none;
+                    border: none;
+                    border-top: 1px solid var(--border-light);
+                    border-radius: 0;
+                }
+            }
+
+
             .main-container {
                 max-width: 900px;
                 margin: 2rem auto;
                 padding: 0 1rem;
+                flex: 1;
             }
 
-            /* Encabezado */
+
             .page-header {
                 text-align: center;
                 margin-bottom: 2rem;
@@ -66,7 +147,7 @@
                 font-size: 2rem;
             }
 
-            /* Tarjeta de sección */
+
             .section-card {
                 background-color: var(--bg-card);
                 border-radius: 8px;
@@ -91,7 +172,6 @@
                 font-size: 1.1rem;
             }
 
-            /* Input de título */
             .title-input {
                 width: 100%;
                 padding: 1rem;
@@ -112,7 +192,6 @@
                 color: #aaa;
             }
 
-            /* Agregando estilos para textarea de contenido */
             .content-textarea {
                 width: 100%;
                 padding: 1rem;
@@ -137,7 +216,6 @@
                 color: #aaa;
             }
 
-            /* Botones */
             .btn-publish {
                 background-color: var(--primary-color);
                 color: white;
@@ -163,7 +241,6 @@
                 transform: translateY(0);
             }
 
-            /* Footer */
             .footer-section {
                 background-color: white;
                 border-top: 1px solid var(--border-light);
@@ -205,7 +282,6 @@
                 border-top: 1px solid var(--border-light);
             }
 
-            /* Responsive */
             @media screen and (max-width: 768px) {
                 .main-container {
                     margin: 1rem auto;
@@ -226,21 +302,52 @@
         </style>
     </head>
     <body>
-        <!-- Navbar Minimalista -->
-        <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-            <div class="container">
-                <div class="navbar-brand">
-                    <a class="navbar-item" href="#" style="font-weight: 700; font-size: 1.1rem;">
-                        <i class="fas fa-lightbulb" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
-                        Propuestas
-                    </a>
-                </div>
-                <div class="navbar-menu is-active">
-                    <div class="navbar-end">
-                        <div class="navbar-item">
-                            <a href="#" class="navbar-item" style="color: var(--text-primary);">
-                                <i class="fas fa-user-circle" style="margin-right: 0.5rem;"></i>
-                                Perfil
+        <%
+            String correo = request.getParameter("correo");
+            if (correo == null || correo.trim().isEmpty()) {
+                response.sendRedirect("login.jsp?error=no_correo");
+                return;
+            }
+            String correoEncoded = java.net.URLEncoder.encode(correo, "UTF-8");
+        %>
+
+        <nav class="navbar custom-navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="perfil.jsp?correo=<%= correoEncoded%>">
+                    <i class="fas fa-lightbulb" style="color: var(--primary-color);"></i>
+                    &nbsp; <strong>SistemaPropuestas</strong>
+                </a>
+
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-end">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            <i class="fas fa-bars"></i>
+                            &nbsp; Menú
+                        </a>
+
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="front.jsp?correo=<%= correoEncoded%>">
+                                <i class="fas fa-home"></i>
+                                &nbsp; Inicio
+                            </a>
+
+                            <a class="navbar-item" href="front.jsp?correo=<%= correoEncoded%>">
+                                <i class="fas fa-list"></i>
+                                &nbsp; Mis Propuestas
+                            </a>
+                            
+                            <hr class="navbar-divider">
+                            <a class="navbar-item" href="login.jsp">
+                                <i class="fas fa-sign-out-alt"></i>
+                                &nbsp; Cerrar Sesión
                             </a>
                         </div>
                     </div>
@@ -248,7 +355,6 @@
             </div>
         </nav>
 
-        <!-- Contenedor principal -->
         <div class="main-container">
             <!-- Encabezado -->
             <div class="page-header">
@@ -259,7 +365,6 @@
                 <p style="color: #666; margin-top: 0.5rem;">Comparte tu idea con la comunidad</p>
             </div>
 
-            <!-- Sección simplificada: Título sin formato -->
             <div class="section-card">
                 <h2>
                     <i class="fas fa-heading"></i>
@@ -275,7 +380,6 @@
                 <small style="color: #999; margin-top: 0.5rem; display: block;">Máximo 100 caracteres</small>
             </div>
 
-            <!-- Nueva sección: Contenido de la propuesta -->
             <div class="section-card">
                 <h2>
                     <i class="fas fa-file-alt"></i>
@@ -302,40 +406,60 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <footer class="footer-section">
             <div class="container">
                 <div class="columns">
                     <div class="column is-4">
-                        <div class="footer-logo">Logo</div>
-                        <p style="color: #999; font-size: 0.9rem;">© 2025 Your Website. All rights reserved</p>
+                        <div class="footer-logo">
+                            <i class="fas fa-lightbulb" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            Sistema de Propuestas
+                        </div>
+                        <p style="color: #999; font-size: 0.9rem;">Plataforma para compartir y gestionar ideas innovadoras</p>
                     </div>
                     <div class="column is-4 has-text-centered">
                         <div class="footer-links">
-                            <a href="#">Link one</a>
-                            <a href="#">Link two</a>
-                            <a href="#">Link three</a>
+                            <a href="front.jsp?correo=<%= correoEncoded%>">Inicio</a>
+                            <a href="nuevapropuesta.jsp?correo=<%= correoEncoded%>">Crear Propuesta</a>
+                            <a href="#">Ayuda</a>
                         </div>
                     </div>
                     <div class="column is-4 has-text-right">
                         <div class="footer-links" style="justify-content: flex-end;">
-                            <a href="#">Privacy Policy</a>
-                            <a href="#">Terms of Service</a>
+                            <a href="#">Política de Privacidad</a>
+                            <a href="#">Términos de Servicio</a>
                         </div>
                     </div>
                 </div>
                 <div class="footer-copyright">
-                    Powered by Propuestas Platform
+                    &copy; 2025 Sistema de Propuestas. Todos los derechos reservados.
                 </div>
             </div>
         </footer>
 
         <script>
+
+            document.addEventListener('DOMContentLoaded', () => {
+
+                const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+                $navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+
+
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+                    });
+                });
+            });
+
             const publishBtn = document.getElementById('publishBtn');
             const titleInput = document.getElementById('titleInput');
             const contentTextarea = document.getElementById('contentTextarea');
 
-            // URL base de la API
+
             const apiURL = "http://localhost:8080/propuesta-ms/propuestas/";
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -351,14 +475,19 @@
                 }
                 if (!titulo) {
                     alert('Por favor ingresa un título');
+                    titleInput.focus();
                     return;
                 }
                 if (!contenido) {
                     alert('Por favor ingresa el contenido de la propuesta');
+                    contentTextarea.focus();
                     return;
                 }
 
-                // Construir datos para enviar
+
+                publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando...';
+                publishBtn.disabled = true;
+
                 const propuestaData = {
                     correo: correo,
                     titulo: titulo,
@@ -366,7 +495,6 @@
                 };
 
                 try {
-                    // Usar la API URL completa
                     const response = await fetch(apiURL, {
                         method: "POST",
                         headers: {
@@ -391,6 +519,9 @@
                 } catch (error) {
                     console.error("Error en el fetch:", error);
                     alert("❌ Error de conexión: " + error.message);
+                } finally {
+                    publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publicar Propuesta';
+                    publishBtn.disabled = false;
                 }
             });
         </script>

@@ -55,10 +55,16 @@
                 box-shadow: var(--shadow-sm);
                 border-bottom: 1px solid rgba(193, 120, 23, 0.08);
                 backdrop-filter: blur(20px);
+                padding: 0 1.5rem;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 0 1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .navbar-brand {
+                display: flex;
+                align-items: center;
             }
 
             .navbar-item {
@@ -102,6 +108,7 @@
                 right: 0;
                 min-width: 200px;
                 display: none;
+                z-index: 100;
             }
 
             .navbar-dropdown.is-active {
@@ -131,7 +138,6 @@
                 transform: translateX(5px);
             }
 
-            /* Centrar el título en el navbar */
             .navbar-center {
                 flex: 1;
                 display: flex;
@@ -157,6 +163,29 @@
                 align-items: center;
                 gap: 0.5rem;
                 position: relative;
+            }
+
+            .navbar-burger {
+                color: var(--primary-dark);
+                transition: all 0.3s ease;
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 1.5rem;
+                padding: 0.5rem;
+                border-radius: 10px;
+                display: none;
+            }
+
+            .navbar-burger:hover {
+                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+            }
+
+            .navbar-menu {
+                display: flex;
+                align-items: center;
+                flex-grow: 1;
+                justify-content: space-between;
             }
 
             .main-container {
@@ -230,31 +259,48 @@
             .propuesta-card .card-footer {
                 border-top: 1px solid rgba(193, 120, 23, 0.08);
                 background: linear-gradient(135deg, rgba(250, 250, 250, 0.3), rgba(243, 244, 246, 0.5));
-                padding: 0;
+                padding: 1.5rem;
                 display: flex;
-                justify-content: flex-end;
+                justify-content: center;
+                align-items: center;
+                gap: 1.5rem;
+                flex-wrap: wrap;
             }
 
-            /* Solo botón de editar */
-            .propuesta-card .card-footer-item {
-                padding: 1.25rem 2rem;
+            .btn-action {
+                padding: 0.875rem 1.75rem;
                 color: white;
                 font-weight: 700;
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
+                justify-content: center;
                 gap: 0.75rem;
                 font-size: 0.95rem;
-                background: linear-gradient(135deg, var(--primary), var(--primary-light));
                 border: none;
                 cursor: pointer;
                 border-radius: 10px;
-                margin: 1rem;
                 text-decoration: none;
+                min-width: 140px;
             }
 
-            .propuesta-card .card-footer-item:hover {
+            .btn-edit {
+                background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            }
+
+            .btn-edit:hover {
                 background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+                color: white;
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .btn-delete {
+                background: linear-gradient(135deg, #DC2626, #EF4444);
+            }
+
+            .btn-delete:hover {
+                background: linear-gradient(135deg, #991B1B, #DC2626);
                 color: white;
                 transform: translateY(-2px);
                 box-shadow: var(--shadow-md);
@@ -336,33 +382,66 @@
                 font-weight: 700;
             }
 
-            .navbar-burger {
-                color: var(--primary-dark);
-                transition: all 0.3s ease;
-                background: none;
-                border: none;
-                cursor: pointer;
-                font-size: 1.5rem;
-            }
+            @media (max-width: 1024px) {
+                .navbar-menu {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    width: 100%;
+                    display: none;
+                }
 
-            .navbar-burger:hover {
-                background: linear-gradient(135deg, rgba(193, 120, 23, 0.08), rgba(232, 159, 60, 0.12));
+                .navbar-menu.is-active {
+                    display: flex;
+                }
+
+                .navbar-start, .navbar-end {
+                    flex-direction: column;
+                    width: 100%;
+                    align-items: flex-start;
+                }
+
+                .navbar-start .navbar-item,
+                .navbar-end .navbar-item {
+                    width: 100%;
+                    justify-content: flex-start;
+                    margin: 0.25rem 0;
+                }
+
+                .navbar-center {
+                    order: -1;
+                    justify-content: flex-start;
+                    margin-bottom: 1rem;
+                }
+
+                .navbar-burger {
+                    display: block;
+                }
+
+                .navbar-end {
+                    position: static;
+                }
+
+                .navbar-dropdown {
+                    position: static;
+                    width: 100%;
+                    box-shadow: none;
+                    border-radius: 0;
+                    margin-top: 0;
+                    display: none;
+                }
+
+                .navbar-dropdown.is-active {
+                    display: block;
+                }
             }
 
             @media (max-width: 768px) {
                 .navbar {
-                    flex-wrap: wrap;
                     padding: 1rem;
                 }
 
-                .navbar-center {
-                    display: none;
-                }
-
-                .navbar-menu {
-                    background: white;
-                    box-shadow: var(--shadow-md);
-                    border-radius: 0 0 16px 16px;
+                .navbar-title {
+                    font-size: 1.2rem;
                 }
 
                 .main-container {
@@ -375,6 +454,21 @@
 
                 .propuesta-card .card-content {
                     padding: 2rem 1.75rem;
+                }
+
+                .propuesta-card .card-footer {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 1rem;
+                }
+
+                .btn-action {
+                    width: 100%;
+                }
+
+                .meta-info {
+                    flex-direction: column;
+                    gap: 1rem;
                 }
             }
         </style>
@@ -391,44 +485,51 @@
             String correoEncoded = java.net.URLEncoder.encode(correo, "UTF-8");
         %>
 
-        <!-- Navbar simplificado y centrado -->
         <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-            <div class="navbar-start">
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+            <div class="navbar-brand">
+                <button class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
                     <i class="fas fa-bars"></i>
-                </a>
-                <a class="navbar-item" href="perfil.jsp?correo=<%= correoEncoded%>">
-                    <i class="fas fa-user-circle"></i>
-                    <span class="ml-2">Perfil</span>
-                </a>
+                </button>
             </div>
 
-            <!-- Título centrado en el navbar -->
-            <div class="navbar-center">
-                <h1 class="navbar-title">
-                    <i class="fas fa-lightbulb mr-2"></i>Mis Propuestas
-                </h1>
-            </div>
-
-            <div class="navbar-end">
-                <div style="position: relative;">
-                    <a class="navbar-link" id="menuToggle">
-                        <i class="fas fa-ellipsis-v"></i>
+            <div class="navbar-menu" id="navbarMenu">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="perfil.jsp?correo=<%= correoEncoded%>">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Perfil</span>
                     </a>
-                    <div class="navbar-dropdown is-right" id="menuDropdown">
-                        <a class="navbar-item" href="verpropuestas.jsp?correo=<%= correoEncoded%>">
-                            <i class="fas fa-list"></i>
-                            <span>Ver Mis Propuestas</span>
+
+                </div>
+
+                <div class="navbar-center">
+                    <h1 class="navbar-title">
+                        <i class="fas fa-lightbulb mr-2"></i>Mis Propuestas
+                    </h1>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item has-dropdown">
+                        <a class="navbar-link" id="menuToggle">
+                            <i class="fas fa-bars"></i>
+                            <span class="ml-2">Menú</span>
                         </a>
-                        <a class="navbar-item" href="nuevapropuesta.jsp?correo=<%= correoEncoded%>">
-                            <i class="fas fa-plus"></i>
-                            <span>Nueva Propuesta</span>
-                        </a>
-                        <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid rgba(193, 120, 23, 0.08);">
-                        <a class="navbar-item" href="login.jsp">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Cerrar Sesión</span>
-                        </a>
+                        <div class="navbar-dropdown is-right" id="menuDropdown">
+
+                            <a class="navbar-item" href="perfil.jsp?correo=<%= correoEncoded%>">
+                                <i class="fas fa-home"></i>
+                                <span class="ml-2">Inicio</span>
+                            </a>
+
+                            <a class="navbar-item" href="nuevapropuesta.jsp?correo=<%= correoEncoded%>">
+                                <i class="fas fa-plus"></i>
+                                <span>Nueva Propuesta</span>
+                            </a>
+                            <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid rgba(193, 120, 23, 0.08);">
+                            <a class="navbar-item" href="login.jsp">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Cerrar Sesión</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -436,7 +537,6 @@
 
         <div style="height: 80px;"></div>
 
-        <!-- Eliminado el page-header duplicado y contenedor main innecesario -->
         <div class="main-container">
             <div class="loading-spinner" id="loadingSpinner"></div>
             <div id="propuestas"></div>
@@ -451,38 +551,40 @@
             document.addEventListener('DOMContentLoaded', function () {
                 console.log('🔧 Configurando menús...');
 
-                const menuToggle = document.getElementById('menuToggle');
-                const menuDropdown = document.getElementById('menuDropdown');
-
-                menuToggle.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    menuDropdown.classList.toggle('is-active');
-                    console.log('📱 Menú ' + (menuDropdown.classList.contains('is-active') ? 'abierto' : 'cerrado'));
-                });
-
-                document.addEventListener('click', function (e) {
-                    if (!menuDropdown.contains(e.target) && e.target !== menuToggle) {
-                        menuDropdown.classList.remove('is-active');
-                    }
-                });
-
-                const menuItems = menuDropdown.querySelectorAll('.navbar-item, .button-as-link');
-                menuItems.forEach(item => {
-                    item.addEventListener('click', function () {
-                        menuDropdown.classList.remove('is-active');
-                    });
-                });
-
                 const navbarBurger = document.querySelector('.navbar-burger');
                 const navbarMenu = document.getElementById('navbarMenu');
 
                 if (navbarBurger) {
-                    navbarBurger.addEventListener('click', function () {
+                    navbarBurger.addEventListener('click', function (e) {
+                        e.stopPropagation();
                         navbarBurger.classList.toggle('is-active');
                         navbarMenu.classList.toggle('is-active');
                         console.log('🍔 Menú hamburguesa ' + (navbarMenu.classList.contains('is-active') ? 'abierto' : 'cerrado'));
                     });
                 }
+
+
+                const menuToggle = document.getElementById('menuToggle');
+                const menuDropdown = document.getElementById('menuDropdown');
+
+                if (menuToggle) {
+                    menuToggle.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        menuDropdown.classList.toggle('is-active');
+                        console.log('📱 Menú ' + (menuDropdown.classList.contains('is-active') ? 'abierto' : 'cerrado'));
+                    });
+                }
+
+
+                document.addEventListener('click', function (e) {
+                    if (menuDropdown && !menuDropdown.contains(e.target) && e.target !== menuToggle) {
+                        menuDropdown.classList.remove('is-active');
+                    }
+                    if (navbarMenu && !navbarMenu.contains(e.target) && e.target !== navbarBurger && !navbarBurger.contains(e.target)) {
+                        navbarBurger.classList.remove('is-active');
+                        navbarMenu.classList.remove('is-active');
+                    }
+                });
 
                 console.log('📥 Iniciando carga de propuestas...');
                 cargarPropuestas();
@@ -573,9 +675,13 @@
                                     '</div>' +
                                     '</div>' +
                                     '<footer class="card-footer">' +
-                                    '<button class="btn-donation" onclick="realizarDonacion(' + i + ', \'' + (p.id || '') + '\')">' +
-                                    '<i class="fas fa-heart"></i>' +
-                                    'Donar' +
+                                    '<button class="btn-action btn-edit" onclick="editarPropuesta(\'' + (p.id || '') + '\')">' +
+                                    '<i class="fas fa-edit"></i>' +
+                                    'Editar' +
+                                    '</button>' +
+                                    '<button class="btn-action btn-delete" onclick="eliminarPropuesta(\'' + (p.id || '') + '\')">' +
+                                    '<i class="fas fa-trash-alt"></i>' +
+                                    'Eliminar' +
                                     '</button>' +
                                     '</footer>' +
                                     '</div>';
@@ -600,11 +706,63 @@
                 }
             }
 
-            function realizarDonacion(indice, propuestaId) {
-                console.log('💝 Iniciando donación para propuesta: ' + propuestaId);
-                // Aquí puedes integrar con tu sistema de pagos (Stripe, PayPal, etc.)
-                alert('¡Gracias por tu intención de donar a esta propuesta!\n\nPropuesta ID: ' + propuestaId + '\n\nEsta funcionalidad se integrará con un sistema de pagos próximamente.');
+            function editarPropuesta(propuestaId) {
+                console.log('✏️ Editando propuesta: ' + propuestaId);
+
+                if (!propuestaId || propuestaId === 'undefined' || propuestaId === 'null') {
+                    mostrarNotificacion('❌ Error: ID de propuesta no válido', 'error');
+                    return;
+                }
+
+                window.location.href = 'editarpropuesta.jsp?id=' + propuestaId + '&correo=' + encodeURIComponent(correoUsuario);
+            }
+
+            async function eliminarPropuesta(propuestaId) {
+                if (!propuestaId || propuestaId === 'undefined' || propuestaId === 'null') {
+                    alert('❌ Error: ID de propuesta no válido');
+                    return;
+                }
+
+                if (!confirm('¿Estás seguro de que deseas eliminar esta propuesta? Esta acción no se puede deshacer.')) {
+                    return;
+                }
+
+                console.log('🗑️ Eliminando propuesta: ' + propuestaId);
+                
+                try {
+                    const deleteURL = "http://localhost:8080/propuesta-ms/propuestas/" + propuestaId;
+                    console.log('🔗 URL de eliminación: ' + deleteURL);
+
+                    const response = await fetch(deleteURL, {
+                        method: "DELETE",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        }
+                    });
+
+                    console.log('📥 Response status: ' + response.status);
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error('Error al eliminar: ' + response.status + ' - ' + errorText);
+                    }
+
+                    const result = await response.json();
+                    console.log('✅ Respuesta del servidor: ', result);
+
+                    if (result.success) {
+                        alert('✅ Propuesta eliminada exitosamente');
+                        // Recargar la página completa
+                        window.location.reload();
+                    } else {
+                        alert('❌ Error: ' + (result.message || 'No se pudo eliminar la propuesta'));
+                    }
+                } catch (error) {
+                    console.error('❌ Error al eliminar: ', error.message);
+                    alert('❌ Error al eliminar la propuesta: ' + error.message);
+                }
             }
         </script>
-         </body>
+    </body>
 </html>

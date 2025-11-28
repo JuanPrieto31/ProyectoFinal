@@ -23,7 +23,6 @@ public class datos {
 
     public datos(String URL, String USER, String PASSWORD) throws SQLException {
         try {
-            // Forzar carga del driver de PostgreSQL
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             System.out.println("❌ Error cargando el driver de PostgreSQL");

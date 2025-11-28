@@ -135,7 +135,6 @@
                 position: relative;
             }
 
-            /* Corregido el posicionamiento de los iconos para alinearlos verticalmente con los inputs */
             .field-icon {
                 position: absolute;
                 left: 1rem;
@@ -205,7 +204,7 @@
 
             .custom-field {
                 position: relative;
-                min-height: 100px; /* ajusta si quieres, 90–110 funciona bien */
+                min-height: 100px; 
             }
 
 

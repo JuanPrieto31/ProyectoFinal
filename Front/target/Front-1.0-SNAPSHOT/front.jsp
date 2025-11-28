@@ -50,7 +50,6 @@
                 }
             }
 
-            /* Added complete navbar styles */
             .navbar {
                 background: white;
                 box-shadow: var(--shadow-sm);
@@ -144,7 +143,6 @@
                 z-index: 1;
             }
 
-            /* Enhanced card styles with animations */
             .propuesta-card {
                 background: white;
                 border-radius: 20px;
@@ -261,8 +259,6 @@
                 box-shadow: 0 8px 16px rgba(193, 120, 23, 0.25);
             }
 
-
-            /* Added loading spinner styles */
             .loading-spinner {
                 width: 56px;
                 height: 56px;
@@ -280,7 +276,6 @@
                 }
             }
 
-            /* Enhanced notification styles */
             .notification {
                 border-radius: 16px;
                 box-shadow: var(--shadow-sm);
@@ -336,7 +331,6 @@
                 transform: translateX(5px);
             }
 
-            /* Added meta info styles */
             .meta-info {
                 display: flex;
                 gap: 2rem;
@@ -537,7 +531,6 @@
                 try {
                     console.log('📤 Solicitando propuestas para: ' + correoUsuario);
 
-                    // Construir URL con parámetros GET
                     const url = new URL(apiURL);
                     if (correoUsuario && correoUsuario !== "null") {
                         url.searchParams.append('correo', correoUsuario);
